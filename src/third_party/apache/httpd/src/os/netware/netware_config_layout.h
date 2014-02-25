@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-/*
- * This file will include OS specific functions which are not inlineable.
- * Any inlineable functions should be defined in os-inline.c instead.
+/**
+ * @file netware/netware_config_layout.h
+ * @brief This provides layout definitions for non-autoconf-based NetWare
+ * builds, and is copied to include/ap_config_layout.h during the build.
  */
 
-#include "ap_config.h"
-#include "os.h"
-#include "httpd.h"
-#include "apr_thread_proc.h"
-#include "ap_mpm.h" /* needed for definition of
-                     * ap_os_create_privileged_process */
+#ifndef AP_CONFIG_LAYOUT_H
+#define AP_CONFIG_LAYOUT_H
 
-AP_DECLARE(apr_status_t) ap_os_create_privileged_process(
-    const request_rec *r,
-    apr_proc_t *newproc, const char *progname,
-    const char * const *args,
-    const char * const *env,
-    apr_procattr_t *attr, apr_pool_t *p)
-{
-    return apr_proc_create(newproc, progname, args, env, attr, p);
-}
+/* Check for definition of DEFAULT_REL_RUNTIMEDIR */
+#ifndef DEFAULT_REL_RUNTIMEDIR
+#define DEFAULT_REL_RUNTIMEDIR "logs"
+#endif
+
+#endif /* AP_CONFIG_LAYOUT_H */

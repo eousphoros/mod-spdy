@@ -15,28 +15,17 @@
  */
 
 /**
- * @file  beos/os.h
- * @brief This file in included in all Apache source code. It contains definitions
- * of facilities available on _this_ operating system (HAVE_* macros),
- * and prototypes of OS specific functions defined in os.c or os-inline.c
- *
- * @defgroup APACHE_OS_BEOS beos
- * @ingroup  APACHE_OS
- * @{
+ * @file win32/win32_config_layout.h
+ * @brief This provides layout definitions for non-autoconf-based Windows
+ * builds, and is copied to include/ap_config_layout.h during the build.
  */
 
-#ifndef APACHE_OS_H
-#define APACHE_OS_H
+#ifndef AP_CONFIG_LAYOUT_H
+#define AP_CONFIG_LAYOUT_H
 
-#include "ap_config.h"
-
-#ifndef PLATFORM
-# ifdef BONE_VERSION
-#  define PLATFORM "BeOS BONE"
-# else
-#  define PLATFORM "BeOS R5"
-# endif
+/* Check for definition of DEFAULT_REL_RUNTIMEDIR */
+#ifndef DEFAULT_REL_RUNTIMEDIR
+#define DEFAULT_REL_RUNTIMEDIR "logs"
 #endif
 
-#endif	/* !APACHE_OS_H */
-/** @} */
+#endif /* AP_CONFIG_LAYOUT_H */

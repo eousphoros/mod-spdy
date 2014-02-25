@@ -38,12 +38,12 @@
 /* hint for MSL C++ that we're on NetWare platform */
 #define __NETWARE__
 
-/* the FAR keyword has no meaning in a 32-bit environment 
+/* the FAR keyword has no meaning in a 32-bit environment
    but is used in the SDK headers so we take it out */
 #define FAR
 #define far
 
-/* no-op for Codewarrior C compiler; a functions are cdecl 
+/* no-op for Codewarrior C compiler; a functions are cdecl
    by default */
 #define cdecl
 
@@ -62,12 +62,6 @@
 #ifndef __int64
 #define __int64 long long
 #endif
-
-/* Don't use the DBM rewrite map for mod_rewrite */
-#define NO_DBM_REWRITEMAP
-
-/* Allow MOD_AUTH_DBM to use APR */
-#define AP_AUTH_DBM_USE_APR
 
 /* Restrict the number of nested includes */
 #define AP_MAX_INCLUDE_DEPTH    48

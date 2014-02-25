@@ -14,19 +14,47 @@
  * limitations under the License.
  */
 
+#ifndef HEARTBEAT_H
+#define HEARTBEAT_H
+
 /**
- * @file  tpf/ebcdic.h
- * @brief EBCDIC/ASCII converson function declarations
+ * @file  heartbeat.h
+ * @brief commun structures for mod_heartmonitor.c  and mod_lbmethod_heartbeat.c
  *
- * @addtogroup APACHE_OS_TPF
+ * @defgroup HEARTBEAT mem
+ * @ingroup  APACHE_MODS
  * @{
  */
- 
-#include <sys/types.h>
 
-extern const unsigned char os_toascii[256];
-extern const unsigned char os_toebcdic[256];
-void ebcdic2ascii(void *dest, const void *srce, size_t count);
-void ebcdic2ascii_strictly(unsigned char *dest, const unsigned char *srce, size_t count);
-void ascii2ebcdic(void *dest, const void *srce, size_t count);
+#include "apr.h"
+#include "apr_time.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+ * Worse Case: IPv4-Mapped IPv6 Address
+ * 0000:0000:0000:0000:0000:FFFF:255.255.255.255
+ */
+#define MAXIPSIZE  46
+typedef struct hm_slot_server_t
+{
+    char ip[MAXIPSIZE];
+    int busy;
+    int ready;
+    apr_time_t seen;
+    int id;
+} hm_slot_server_t;
+
+/* default name of heartbeat data file, created in the configured
+ * runtime directory when mod_slotmem_shm is not available
+ */
+#define DEFAULT_HEARTBEAT_STORAGE "hb.dat"
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
 /** @} */

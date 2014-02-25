@@ -14,42 +14,51 @@
  * limitations under the License.
  */
 
+
 /**
- * @file  util_charset.h
- * @brief charset conversion
+ * @file  mod_request.h
+ * @brief mod_request private header file
  *
- * @defgroup APACHE_CORE_CHARSET Charset Conversion
- * @ingroup  APACHE_CORE
+ * @defgroup MOD_REQUEST mod_request
+ * @ingroup  APACHE_MODS
  * @{
  */
 
-#ifndef APACHE_UTIL_CHARSET_H
-#define APACHE_UTIL_CHARSET_H
+#ifndef MOD_REQUEST_H
+#define MOD_REQUEST_H
+
+#include "apr.h"
+#include "apr_buckets.h"
+#include "apr_optional.h"
+
+#include "httpd.h"
+#include "util_filter.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "apr.h"
+extern module AP_MODULE_DECLARE_DATA request_module;
 
-#if APR_CHARSET_EBCDIC
+#define KEEP_BODY_FILTER "KEEP_BODY"
+#define KEPT_BODY_FILTER "KEPT_BODY"
 
-#include "apr_xlate.h"
+/**
+ * Core per-directory configuration.
+ */
+typedef struct {
+    apr_off_t keep_body;
+    int keep_body_set;
+} request_dir_conf;
 
-/** On EBCDIC machine this is a translation handle used to translate the
- *  headers from the local machine format to ASCII for network transmission.
- *  On an ASCII machine this is NULL */
-extern apr_xlate_t *ap_hdrs_to_ascii;
-/** On EBCDIC machine this is a translation handle used to translate the
- *  headers from ASCII to the local machine format after network transmission.
- *  On an ASCII machine this is NULL */
-extern apr_xlate_t *ap_hdrs_from_ascii;
+APR_DECLARE_OPTIONAL_FN(void, ap_request_insert_filter, (request_rec * r));
 
-#endif  /* APR_CHARSET_EBCDIC */
+APR_DECLARE_OPTIONAL_FN(void, ap_request_remove_filter, (request_rec * r));
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* !APACHE_UTIL_CHARSET_H */
+#endif /* !MOD_REQUEST_H */
 /** @} */
