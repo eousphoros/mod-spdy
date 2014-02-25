@@ -181,10 +181,10 @@ apr_memcache_find_server_hash_default(void *baton, apr_memcache_t *mc,
 #if APR_HAS_THREADS
             apr_thread_mutex_lock(ms->lock);
 #endif
-            /* Try the the dead server, every 5 seconds */
+            /* Try the dead server, every 5 seconds */
             if (curtime - ms->btime >  apr_time_from_sec(5)) {
+                ms->btime = curtime;
                 if (mc_version_ping(ms) == APR_SUCCESS) {
-                    ms->btime = curtime;
                     make_server_live(mc, ms);
 #if APR_HAS_THREADS
                     apr_thread_mutex_unlock(ms->lock);
@@ -289,8 +289,13 @@ static apr_status_t conn_connect(apr_memcache_conn_t *conn)
 {
     apr_status_t rv = APR_SUCCESS;
     apr_sockaddr_t *sa;
+#if APR_HAVE_SOCKADDR_UN
+    apr_int32_t family = conn->ms->host[0] != '/' ? APR_INET : APR_UNIX;
+#else
+    apr_int32_t family = APR_INET;
+#endif
 
-    rv = apr_sockaddr_info_get(&sa, conn->ms->host, APR_INET, conn->ms->port, 0, conn->p);
+    rv = apr_sockaddr_info_get(&sa, conn->ms->host, family, conn->ms->port, 0, conn->p);
     if (rv != APR_SUCCESS) {
         return rv;
     }
@@ -313,27 +318,6 @@ static apr_status_t conn_connect(apr_memcache_conn_t *conn)
     return rv;
 }
 
-static apr_status_t conn_clean(void *data)
-{
-    apr_memcache_conn_t *conn = data;
-    struct iovec vec[2];
-    apr_size_t written;
-
-    /* send a quit message to the memcached server to be nice about it. */
-    vec[0].iov_base = MC_QUIT;
-    vec[0].iov_len = MC_QUIT_LEN;
-
-    vec[1].iov_base = MC_EOL;
-    vec[1].iov_len = MC_EOL_LEN;
-    
-    /* Return values not checked, since we just want to make it go away. */
-    apr_socket_sendv(conn->sock, vec, 2, &written);
-    apr_socket_close(conn->sock);
-
-    conn->p = NULL; /* so that destructor does not destroy the pool again */
-
-    return APR_SUCCESS;
-}
 
 static apr_status_t
 mc_conn_construct(void **conn_, void *params, apr_pool_t *pool)
@@ -343,6 +327,11 @@ mc_conn_construct(void **conn_, void *params, apr_pool_t *pool)
     apr_pool_t *np;
     apr_pool_t *tp;
     apr_memcache_server_t *ms = params;
+#if APR_HAVE_SOCKADDR_UN
+    apr_int32_t family = ms->host[0] != '/' ? APR_INET : APR_UNIX;
+#else
+    apr_int32_t family = APR_INET;
+#endif
 
     rv = apr_pool_create(&np, pool);
     if (rv != APR_SUCCESS) {
@@ -355,22 +344,15 @@ mc_conn_construct(void **conn_, void *params, apr_pool_t *pool)
         return rv;
     }
 
-#if APR_HAS_THREADS
-    conn = malloc(sizeof( apr_memcache_conn_t )); /* non-pool space! */
-#else
     conn = apr_palloc(np, sizeof( apr_memcache_conn_t ));
-#endif
 
     conn->p = np;
     conn->tp = tp;
 
-    rv = apr_socket_create(&conn->sock, APR_INET, SOCK_STREAM, 0, np);
+    rv = apr_socket_create(&conn->sock, family, SOCK_STREAM, 0, np);
 
     if (rv != APR_SUCCESS) {
         apr_pool_destroy(np);
-#if APR_HAS_THREADS
-        free(conn);
-#endif
         return rv;
     }
 
@@ -381,12 +363,8 @@ mc_conn_construct(void **conn_, void *params, apr_pool_t *pool)
     rv = conn_connect(conn);
     if (rv != APR_SUCCESS) {
         apr_pool_destroy(np);
-#if APR_HAS_THREADS
-        free(conn);
-#endif
     }
     else {
-        apr_pool_cleanup_register(np, conn, conn_clean, apr_pool_cleanup_null);
         *conn_ = conn;
     }
     
@@ -398,12 +376,21 @@ static apr_status_t
 mc_conn_destruct(void *conn_, void *params, apr_pool_t *pool)
 {
     apr_memcache_conn_t *conn = (apr_memcache_conn_t*)conn_;
+    struct iovec vec[2];
+    apr_size_t written;
     
-    if (conn->p) {
-        apr_pool_destroy(conn->p);
-    }
+    /* send a quit message to the memcached server to be nice about it. */
+    vec[0].iov_base = MC_QUIT;
+    vec[0].iov_len = MC_QUIT_LEN;
 
-    free(conn); /* free non-pool space */
+    vec[1].iov_base = MC_EOL;
+    vec[1].iov_len = MC_EOL_LEN;
+    
+    /* Return values not checked, since we just want to make it go away. */
+    apr_socket_sendv(conn->sock, vec, 2, &written);
+    apr_socket_close(conn->sock);
+
+    apr_pool_destroy(conn->p);
     
     return APR_SUCCESS;
 }
@@ -441,13 +428,17 @@ APU_DECLARE(apr_status_t) apr_memcache_server_create(apr_pool_t *p,
                                mc_conn_construct,       /* Make a New Connection */
                                mc_conn_destruct,        /* Kill Old Connection */
                                server, np);
-#else
-    rv = mc_conn_construct((void**)&(server->conn), server, np);
-#endif
-
     if (rv != APR_SUCCESS) {
         return rv;
     }
+
+    apr_reslist_cleanup_order_set(server->conns, APR_RESLIST_CLEANUP_FIRST);
+#else
+    rv = mc_conn_construct((void**)&(server->conn), server, np);
+    if (rv != APR_SUCCESS) {
+        return rv;
+    }
+#endif
 
     *ms = server;
 
@@ -793,11 +784,9 @@ apr_memcache_getp(apr_memcache_t *mc,
     if (strncmp(MS_VALUE, conn->buffer, MS_VALUE_LEN) == 0) {
         char *flags;
         char *length;
-        char *start;
         char *last;
         apr_size_t len = 0;
 
-        start = conn->buffer;
         flags = apr_strtok(conn->buffer, " ", &last);
         flags = apr_strtok(NULL, " ", &last);
         flags = apr_strtok(NULL, " ", &last);
@@ -808,10 +797,10 @@ apr_memcache_getp(apr_memcache_t *mc,
 
         length = apr_strtok(NULL, " ", &last);
         if (length) {
-            len = atoi(length);
+            len = strtol(length, (char **)NULL, 10);
         }
 
-        if (len < 0)  {
+        if (len == 0 )  {
             *new_length = 0;
             *baton = NULL;
         }
@@ -1366,12 +1355,10 @@ apr_memcache_multgetp(apr_memcache_t *mc,
                char *key;
                char *flags;
                char *length;
-               char *start;
                char *last;
                char *data;
                apr_size_t len = 0;
 
-               start = conn->buffer;
                key = apr_strtok(conn->buffer, " ", &last); /* just the VALUE, ignore */
                key = apr_strtok(NULL, " ", &last);
                flags = apr_strtok(NULL, " ", &last);
@@ -1379,14 +1366,14 @@ apr_memcache_multgetp(apr_memcache_t *mc,
 
                length = apr_strtok(NULL, " ", &last);
                if (length) {
-                   len = atoi(length);
+                   len = strtol(length, (char **) NULL, 10);
                }
 
                value = apr_hash_get(values, key, strlen(key));
 
                
                if (value) {
-                   if (len >= 0)  {
+                   if (len != 0)  {
                        apr_bucket_brigade *bbb;
                        apr_bucket *e;
                        

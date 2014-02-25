@@ -28,15 +28,10 @@
 #include "apr_errno.h"
 #include "apr_time.h"
 
-#if APR_HAS_THREADS
-
 /**
  * @defgroup APR_Util_RL Resource List Routines
  * @ingroup APR_Util
  * @{
- * @warning
- * <strong><em>Resource list data types and routines are only available when
- * threads are enabled (i.e. APR_HAS_THREADS is not zero).</em></strong>
  */
 
 #ifdef __cplusplus
@@ -49,7 +44,7 @@ typedef struct apr_reslist_t apr_reslist_t;
 /* Generic constructor called by resource list when it needs to create a
  * resource.
  * @param resource opaque resource
- * @param param flags
+ * @param params flags
  * @param pool  Pool
  */
 typedef apr_status_t (*apr_reslist_constructor)(void **resource, void *params,
@@ -58,11 +53,15 @@ typedef apr_status_t (*apr_reslist_constructor)(void **resource, void *params,
 /* Generic destructor called by resource list when it needs to destroy a
  * resource.
  * @param resource opaque resource
- * @param param flags
+ * @param params flags
  * @param pool  Pool
  */
 typedef apr_status_t (*apr_reslist_destructor)(void *resource, void *params,
                                                apr_pool_t *pool);
+
+/* Cleanup order modes */
+#define APR_RESLIST_CLEANUP_DEFAULT  0       /**< default pool cleanup */
+#define APR_RESLIST_CLEANUP_FIRST    1       /**< use pool pre cleanup */
 
 /**
  * Create a new resource list with the following parameters:
@@ -70,26 +69,22 @@ typedef apr_status_t (*apr_reslist_destructor)(void *resource, void *params,
  *                list will be stored.
  * @param min Allowed minimum number of available resources. Zero
  *            creates new resources only when needed.
- * @param smax Resources will be destroyed to meet this maximum
- *             restriction as they expire.
+ * @param smax Resources will be destroyed during reslist maintenance to
+ *             meet this maximum restriction as they expire (reach their ttl).
  * @param hmax Absolute maximum limit on the number of total resources.
- * @param ttl If non-zero, sets the maximum amount of time in microseconds a
- *            resource may be available while exceeding the soft limit.
+ * @param ttl If non-zero, sets the maximum amount of time in microseconds an
+ *            unused resource is valid.  Any resource which has exceeded this
+ *            time will be destroyed, either when encountered by
+ *            apr_reslist_acquire() or during reslist maintenance.
  * @param con Constructor routine that is called to create a new resource.
  * @param de Destructor routine that is called to destroy an expired resource.
  * @param params Passed to constructor and deconstructor
  * @param pool The pool from which to create this resource list. Also the
  *             same pool that is passed to the constructor and destructor
  *             routines.
- * @warning If you're creating a sub-pool of the pool passed into this
- *          function in your constructor, you will need to follow some rules
- *          when it comes to destruction of that sub-pool, as calling
- *          apr_pool_destroy() outright on it in your destructor may create
- *          double free situations. That is because by the time destructor is
- *          called, the sub-pool may have already been destroyed. This also
- *          means that in the destructor, memory from the sub-pool should be
- *          treated as invalid. For examples of how to do this correctly, see
- *          mod_dbd of Apache 2.2 and memcache support in APR Util 1.3.
+ * @remark If APR has been compiled without thread support, hmax will be
+ *         automatically set to 1 and values of min and smax will be forced to
+ *         1 for any non-zero value.
  */
 APU_DECLARE(apr_status_t) apr_reslist_create(apr_reslist_t **reslist,
                                              int min, int smax, int hmax,
@@ -116,12 +111,17 @@ APU_DECLARE(apr_status_t) apr_reslist_destroy(apr_reslist_t *reslist);
  * Retrieve a resource from the list, creating a new one if necessary.
  * If we have met our maximum number of resources, we will block
  * until one becomes available.
+ * @param reslist The resource list.
+ * @param resource An address where the pointer to the resource
+ *                will be stored.
  */
 APU_DECLARE(apr_status_t) apr_reslist_acquire(apr_reslist_t *reslist,
                                               void **resource);
 
 /**
  * Return a resource back to the list of available resources.
+ * @param reslist The resource list.
+ * @param resource The resource to return to the list.
  */
 APU_DECLARE(apr_status_t) apr_reslist_release(apr_reslist_t *reslist,
                                               void *resource);
@@ -145,17 +145,39 @@ APU_DECLARE(apr_uint32_t) apr_reslist_acquired_count(apr_reslist_t *reslist);
  * Invalidate a resource in the pool - e.g. a database connection
  * that returns a "lost connection" error and can't be restored.
  * Use this instead of apr_reslist_release if the resource is bad.
+ * @param reslist The resource list.
+ * @param resource The resource to invalidate.
  */
 APU_DECLARE(apr_status_t) apr_reslist_invalidate(apr_reslist_t *reslist,
                                                  void *resource);
 
+/**
+ * Perform routine maintenance on the resource list. This call
+ * may instantiate new resources or expire old resources.
+ * @param reslist The resource list.
+ */
+APU_DECLARE(apr_status_t) apr_reslist_maintain(apr_reslist_t *reslist);
+
+/**
+ * Set reslist cleanup order.
+ * @param reslist The resource list.
+ * @param mode Cleanup order mode
+ * <PRE>
+ *           APR_RESLIST_CLEANUP_DEFAULT  default pool cleanup order
+ *           APR_RESLIST_CLEANUP_FIRST    use pool pre cleanup
+ * </PRE>
+ * @remark If APR_RESLIST_CLEANUP_FIRST is used the destructors will
+ * be called before child pools of the pool used to create the reslist
+ * are destroyed. This allows to explicitly destroy the child pools
+ * inside reslist destructors.
+ */
+APU_DECLARE(void) apr_reslist_cleanup_order_set(apr_reslist_t *reslist,
+                                                apr_uint32_t mode);
 
 #ifdef __cplusplus
 }
 #endif
 
 /** @} */
-
-#endif  /* APR_HAS_THREADS */
 
 #endif  /* ! APR_RESLIST_H */

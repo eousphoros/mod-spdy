@@ -164,9 +164,9 @@ if test "${apu_has_expat}${apu_try_builtin_expat}" = "01"; then
   dnl we are working with the bundled version of the software.
   bundled_subdir="xml/expat"
   APR_SUBDIR_CONFIG($bundled_subdir, [--prefix=$prefix --exec-prefix=$exec_prefix --libdir=$libdir --includedir=$includedir --bindir=$bindir])
-  APR_ADDTO(APRUTIL_INCLUDES, [-I$top_builddir/$bundled_subdir/lib])
+  APR_ADDTO(APRUTIL_INCLUDES, [-I$abs_srcdir/$bundled_subdir/lib])
   APR_ADDTO(LDFLAGS, [-L$top_builddir/$bundled_subdir/lib])
-  apu_expat_libs="$top_builddir/$bundled_subdir/lib/libexpat.la"
+  apu_expat_libs="$top_builddir/$bundled_subdir/libexpat.la"
 fi
 
 APR_ADDTO(APRUTIL_EXPORT_LIBS, [$apu_expat_libs])
@@ -195,7 +195,7 @@ AC_DEFUN([APU_FIND_LDAPLIB], [
     unset ac_cv_lib_${ldaplib_cache_id}___ldap_init
     AC_CHECK_LIB(${ldaplib}, ldap_init, 
       [
-        LDADD_ldap="-l${ldaplib} ${extralib}"
+        LDADD_ldap_found="-l${ldaplib} ${extralib}"
         AC_CHECK_LIB(${ldaplib}, ldapssl_client_init, apu_has_ldapssl_client_init="1", , ${extralib})
         AC_CHECK_LIB(${ldaplib}, ldapssl_client_deinit, apu_has_ldapssl_client_deinit="1", , ${extralib})
         AC_CHECK_LIB(${ldaplib}, ldapssl_add_trusted_cert, apu_has_ldapssl_add_trusted_cert="1", , ${extralib})
@@ -233,7 +233,7 @@ apu_has_ldap_mozilla="0"
 apu_has_ldap_tivoli="0"
 apu_has_ldap_zos="0"
 apu_has_ldap_other="0"
-LDADD_ldap=""
+LDADD_ldap_found=""
 
 AC_ARG_WITH(lber,[  --with-lber=library     lber library to use],
   [
@@ -285,9 +285,13 @@ AC_ARG_WITH(ldap,[  --with-ldap=library     ldap library to use],
         APU_FIND_LDAPLIB($LIBLDAP, "-ldl -lpthread")
       fi
 
-      test ${apu_has_ldap} != "1" && AC_MSG_ERROR(could not find an LDAP library)
+      if test ${apu_has_ldap} != "1"; then
+        AC_MSG_ERROR(could not find an LDAP library)
+      else
+        APR_ADDTO(LDADD_ldap, [$LDADD_ldap_found])
+      fi
       AC_CHECK_LIB($apu_liblber_name, ber_init,
-        [LDADD_ldap="${LDADD_ldap} -l${apu_liblber_name}"])
+        [APR_ADDTO(LDADD_ldap, [-l${apu_liblber_name}])])
 
       AC_CHECK_HEADERS(lber.h, lber_h=["#include <lber.h>"])
 
@@ -391,9 +395,7 @@ if test "$apu_has_ldap_openldap" = "1"; then
     #include <ldap.h>
     #endif
     ], [
-    int tmp = ldap_set_rebind_proc((LDAP *)0, (LDAP_REBIND_PROC *)0, (void *)0);
-    /* use tmp to suppress the warning */
-    tmp=0;
+    ldap_set_rebind_proc((LDAP *)0, (LDAP_REBIND_PROC *)0, (void *)0);
     ], ac_cv_ldap_set_rebind_proc_style=three, ac_cv_ldap_set_rebind_proc_style=two))
 
     if test "$ac_cv_ldap_set_rebind_proc_style" = "three"; then
