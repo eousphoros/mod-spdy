@@ -1,0 +1,679 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		A5FDD0B56C7C83E0724A99F2 /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = CA1370D3C21111A999493FF9 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				869221179D926C72CAD8BD72 /* PBXTargetDependency */,
+				4C5F3FBFFB128CA317E4A298 /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = All;
+		};
+		CB20D5E759E6B65B6AF6B040 /* include */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 75F109FF11F305F06B5FAAC9 /* Build configuration list for PBXAggregateTarget "include" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = include;
+			productName = include;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		04CB3A786FF08EDBF27F236C /* apr_buckets_alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 65AE7F8A9360CDCECDB97DC1 /* apr_buckets_alloc.c */; };
+		0CFD626E12D123D42C003BC6 /* apr_dbm.c in Sources */ = {isa = PBXBuildFile; fileRef = C80ADE1159BBD44B8CBEB703 /* apr_dbm.c */; };
+		0F7F70B2E57BAE2877EE8AF8 /* apr_buckets_eos.c in Sources */ = {isa = PBXBuildFile; fileRef = 893EA3270D96FB06C7F839F4 /* apr_buckets_eos.c */; };
+		17C8F38AAD8F655FA86F2445 /* apr_buckets_socket.c in Sources */ = {isa = PBXBuildFile; fileRef = 99A86F44440EDF38F7BFB64B /* apr_buckets_socket.c */; };
+		1D67C4C0256A6C89B469B33B /* sdbm.c in Sources */ = {isa = PBXBuildFile; fileRef = 0C831B46FBB1570439EE6AB9 /* sdbm.c */; };
+		2DBA1D569F5F7801D69FB24F /* apr_dbm_sdbm.c in Sources */ = {isa = PBXBuildFile; fileRef = C5AFC3994EF6923DC3C1E56F /* apr_dbm_sdbm.c */; };
+		2ECB020853B19DB988468AA4 /* apu_version.c in Sources */ = {isa = PBXBuildFile; fileRef = 99BD2A5E2A0AB8B7389D85DF /* apu_version.c */; };
+		3342BF11137889DC1CDED697 /* apr_buckets_mmap.c in Sources */ = {isa = PBXBuildFile; fileRef = D8937AEBB18DBF1246C83CEC /* apr_buckets_mmap.c */; };
+		3653FD45E377D6ADFE74726A /* apr_queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 18CED34C18D36595044E7EE2 /* apr_queue.c */; };
+		3D6CC9EA40FAAD748B0E446D /* apr_uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 70DCF03852EFD5FEE1ACEE80 /* apr_uri.c */; };
+		3E63586FA03B5E82C79AF873 /* apr_rmm.c in Sources */ = {isa = PBXBuildFile; fileRef = 7950DF85FBB068EEDCE4A132 /* apr_rmm.c */; };
+		5E464FA5563746CC77D1945E /* apr_buckets_heap.c in Sources */ = {isa = PBXBuildFile; fileRef = ADF5FC69F825760EE0541ECC /* apr_buckets_heap.c */; };
+		5F832A4426A2EDF498047B93 /* apr_buckets_simple.c in Sources */ = {isa = PBXBuildFile; fileRef = 2F40E9CDE0441010D67D003F /* apr_buckets_simple.c */; };
+		6686438AF43539663680270F /* apr_buckets_pool.c in Sources */ = {isa = PBXBuildFile; fileRef = B0CEC924CC43C841721745BF /* apr_buckets_pool.c */; };
+		6A29E5BD0A4BFB18CD8DDCA0 /* sdbm_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 79E4942F8AE94D0A5FAC0432 /* sdbm_hash.c */; };
+		8FB2880B8E0F4D427ABCB8ED /* apu_dso.c in Sources */ = {isa = PBXBuildFile; fileRef = 5262A863F471532FC80D1975 /* apu_dso.c */; };
+		91FEFA4B8AA1EAD2416F4FE2 /* sdbm_pair.c in Sources */ = {isa = PBXBuildFile; fileRef = 242E4D39FAB8ADDC7501BD6C /* sdbm_pair.c */; };
+		A1B18846DBA21628003D7EB8 /* apr_base64.c in Sources */ = {isa = PBXBuildFile; fileRef = F0EA53E3A59B55EA6C3FB094 /* apr_base64.c */; };
+		ADDE3F2E8B023F6D4925CFAA /* xlate.c in Sources */ = {isa = PBXBuildFile; fileRef = 9BB5F735851C19BFD4BA30BB /* xlate.c */; };
+		B158B3273ED8846D90DA3630 /* apr_reslist.c in Sources */ = {isa = PBXBuildFile; fileRef = 21CFE067FEDBFE535808402D /* apr_reslist.c */; };
+		B1A109312444E00F569DDA65 /* apr_ldap_url.c in Sources */ = {isa = PBXBuildFile; fileRef = 2B2BFAA4B7C10C86932ED2B9 /* apr_ldap_url.c */; };
+		B6FE071FB372B28B62F00F4F /* apr_hooks.c in Sources */ = {isa = PBXBuildFile; fileRef = E7B7434FC7F32D940A17AB9F /* apr_hooks.c */; };
+		B73B5E148F8827D949BC10E8 /* apr_buckets.c in Sources */ = {isa = PBXBuildFile; fileRef = E0E203A0D729266F7955EED0 /* apr_buckets.c */; };
+		B922B245F6106C3EE3F59C0F /* apr_date.c in Sources */ = {isa = PBXBuildFile; fileRef = 394100DA24A0AAB61BA038BB /* apr_date.c */; };
+		BD0CD3EF896421C9F20E0916 /* apr_strmatch.c in Sources */ = {isa = PBXBuildFile; fileRef = FD448A3015B3692E91032860 /* apr_strmatch.c */; };
+		BD3AE71F796EDE722E42800C /* apr_buckets_refcount.c in Sources */ = {isa = PBXBuildFile; fileRef = A0CFD897AE4948D39C178F69 /* apr_buckets_refcount.c */; };
+		C5E8DC9C6B6CE33BE02365E7 /* sdbm_lock.c in Sources */ = {isa = PBXBuildFile; fileRef = 629A7046DB28358FA26792C7 /* sdbm_lock.c */; };
+		C9E324653F369243A04FB582 /* apr_buckets_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 2420D118280F9546244DAA60 /* apr_buckets_file.c */; };
+		DFA9C9A343F84963278A59CB /* apr_memcache.c in Sources */ = {isa = PBXBuildFile; fileRef = F7322D2D008F1AEB0B2B7370 /* apr_memcache.c */; };
+		E3413452DC6DE71057A1F39D /* apr_thread_pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 870D1E7C564D617D8D76134B /* apr_thread_pool.c */; };
+		EC778E0BA0BB85216758B8AA /* apr_brigade.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E4EA433E5C701222F81B8E8 /* apr_brigade.c */; };
+		F2EECFA8572339DFC4BCFC83 /* apr_buckets_flush.c in Sources */ = {isa = PBXBuildFile; fileRef = 4DA97383BA0A47DD9CD3630B /* apr_buckets_flush.c */; };
+		F4954662033274797723C49A /* apr_buckets_pipe.c in Sources */ = {isa = PBXBuildFile; fileRef = 9537152C7DA052F25727B179 /* apr_buckets_pipe.c */; };
+		F62251897A95EC79A926FED4 /* apr_ldap_stub.c in Sources */ = {isa = PBXBuildFile; fileRef = B377DE1C1F3D40BCDF8A4F85 /* apr_ldap_stub.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		26F180761EC0FD58D655EB71 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8F5A9184AF9F5CF7A9FC5E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0910780CFDC0D32388F6F4DC;
+			remoteInfo = aprutil;
+		};
+		32F1232295E91A0FDC7070F7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8F5A9184AF9F5CF7A9FC5E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB20D5E759E6B65B6AF6B040;
+			remoteInfo = include;
+		};
+		AEE6235A3F67A760893725F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3C8F5A9184AF9F5CF7A9FC5E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB20D5E759E6B65B6AF6B040;
+			remoteInfo = include;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0C831B46FBB1570439EE6AB9 /* sdbm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sdbm.c; sourceTree = "<group>"; };
+		18CED34C18D36595044E7EE2 /* apr_queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_queue.c; sourceTree = "<group>"; };
+		21CFE067FEDBFE535808402D /* apr_reslist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_reslist.c; sourceTree = "<group>"; };
+		2420D118280F9546244DAA60 /* apr_buckets_file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_file.c; sourceTree = "<group>"; };
+		242E4D39FAB8ADDC7501BD6C /* sdbm_pair.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sdbm_pair.c; sourceTree = "<group>"; };
+		2B2BFAA4B7C10C86932ED2B9 /* apr_ldap_url.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_ldap_url.c; sourceTree = "<group>"; };
+		2F40E9CDE0441010D67D003F /* apr_buckets_simple.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_simple.c; sourceTree = "<group>"; };
+		394100DA24A0AAB61BA038BB /* apr_date.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_date.c; sourceTree = "<group>"; };
+		40FA6F956D114635BAC4D621 /* release_defaults.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_defaults.gypi; path = ../../../build/internal/release_defaults.gypi; sourceTree = "<group>"; };
+		4DA97383BA0A47DD9CD3630B /* apr_buckets_flush.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_flush.c; sourceTree = "<group>"; };
+		5262A863F471532FC80D1975 /* apu_dso.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apu_dso.c; sourceTree = "<group>"; };
+		59D611E9786D9A705C71190C /* common.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = common.gypi; path = ../../../build/common.gypi; sourceTree = "<group>"; };
+		629A7046DB28358FA26792C7 /* sdbm_lock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sdbm_lock.c; sourceTree = "<group>"; };
+		65AE7F8A9360CDCECDB97DC1 /* apr_buckets_alloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_alloc.c; sourceTree = "<group>"; };
+		70DCF03852EFD5FEE1ACEE80 /* apr_uri.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_uri.c; sourceTree = "<group>"; };
+		7950DF85FBB068EEDCE4A132 /* apr_rmm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_rmm.c; sourceTree = "<group>"; };
+		79E4942F8AE94D0A5FAC0432 /* sdbm_hash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sdbm_hash.c; sourceTree = "<group>"; };
+		870D1E7C564D617D8D76134B /* apr_thread_pool.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_thread_pool.c; sourceTree = "<group>"; };
+		893EA3270D96FB06C7F839F4 /* apr_buckets_eos.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_eos.c; sourceTree = "<group>"; };
+		8E4EA433E5C701222F81B8E8 /* apr_brigade.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_brigade.c; sourceTree = "<group>"; };
+		8F70B9AB863E467A39E99D13 /* release_impl.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_impl.gypi; path = ../../../build/internal/release_impl.gypi; sourceTree = "<group>"; };
+		9537152C7DA052F25727B179 /* apr_buckets_pipe.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_pipe.c; sourceTree = "<group>"; };
+		99A86F44440EDF38F7BFB64B /* apr_buckets_socket.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_socket.c; sourceTree = "<group>"; };
+		99BD2A5E2A0AB8B7389D85DF /* apu_version.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apu_version.c; sourceTree = "<group>"; };
+		9BB5F735851C19BFD4BA30BB /* xlate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xlate.c; sourceTree = "<group>"; };
+		A0CFD897AE4948D39C178F69 /* apr_buckets_refcount.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_refcount.c; sourceTree = "<group>"; };
+		AA251E3B936A90E67B9DC06F /* libaprutil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libaprutil.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADF5FC69F825760EE0541ECC /* apr_buckets_heap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_heap.c; sourceTree = "<group>"; };
+		B0CEC924CC43C841721745BF /* apr_buckets_pool.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_pool.c; sourceTree = "<group>"; };
+		B377DE1C1F3D40BCDF8A4F85 /* apr_ldap_stub.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_ldap_stub.c; sourceTree = "<group>"; };
+		C5AFC3994EF6923DC3C1E56F /* apr_dbm_sdbm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_dbm_sdbm.c; sourceTree = "<group>"; };
+		C80ADE1159BBD44B8CBEB703 /* apr_dbm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_dbm.c; sourceTree = "<group>"; };
+		D43D355477E6F9C108F08A35 /* release.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release.gypi; path = ../../../build/release.gypi; sourceTree = "<group>"; };
+		D4776B328115D903D85C824E /* release_impl_official.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_impl_official.gypi; path = ../../../build/internal/release_impl_official.gypi; sourceTree = "<group>"; };
+		D8937AEBB18DBF1246C83CEC /* apr_buckets_mmap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets_mmap.c; sourceTree = "<group>"; };
+		E0E203A0D729266F7955EED0 /* apr_buckets.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_buckets.c; sourceTree = "<group>"; };
+		E7B7434FC7F32D940A17AB9F /* apr_hooks.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_hooks.c; sourceTree = "<group>"; };
+		F0EA53E3A59B55EA6C3FB094 /* apr_base64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_base64.c; sourceTree = "<group>"; };
+		F2BE1F36D28FDEFAD9D9F413 /* aprutil.gyp */ = {isa = PBXFileReference; lastKnownFileType = text; path = aprutil.gyp; sourceTree = "<group>"; };
+		F7322D2D008F1AEB0B2B7370 /* apr_memcache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_memcache.c; sourceTree = "<group>"; };
+		FD448A3015B3692E91032860 /* apr_strmatch.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = apr_strmatch.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9A346B2C4B92E2BF56E3136D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		13BEF5202E7B78772390E637 /* sdbm */ = {
+			isa = PBXGroup;
+			children = (
+				0C831B46FBB1570439EE6AB9 /* sdbm.c */,
+				79E4942F8AE94D0A5FAC0432 /* sdbm_hash.c */,
+				629A7046DB28358FA26792C7 /* sdbm_lock.c */,
+				242E4D39FAB8ADDC7501BD6C /* sdbm_pair.c */,
+			);
+			path = sdbm;
+			sourceTree = "<group>";
+		};
+		1851DF0D325E716BD6C969F5 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				B9570A13518D327B8766F962 /* buckets */,
+				9153A84D6DB29D800EC5D7AF /* dbm */,
+				A7D15C163D1DA5D93716F657 /* encoding */,
+				B89E5C8D4661F946A39EB84C /* hooks */,
+				859FC19117DA35255E933D4D /* ldap */,
+				5861B9F5567E51D7DFA94BD3 /* memcache */,
+				B951F9EBC546C52C722A53AB /* misc */,
+				21A36B5807BB1017B1632FB2 /* strmatch */,
+				7E9DE174882DE5B2B383A7AF /* uri */,
+				71E85C71436271682AB45D2D /* xlate */,
+			);
+			name = Source;
+			path = src;
+			sourceTree = "<group>";
+		};
+		21A36B5807BB1017B1632FB2 /* strmatch */ = {
+			isa = PBXGroup;
+			children = (
+				FD448A3015B3692E91032860 /* apr_strmatch.c */,
+			);
+			path = strmatch;
+			sourceTree = "<group>";
+		};
+		4CCFA790181EF719414AC79D = {
+			isa = PBXGroup;
+			children = (
+				1851DF0D325E716BD6C969F5 /* Source */,
+				979C566E272BA9AE9F234A73 /* Products */,
+				D344CECB094EF3DE15762F11 /* Build */,
+			);
+			sourceTree = "<group>";
+		};
+		5861B9F5567E51D7DFA94BD3 /* memcache */ = {
+			isa = PBXGroup;
+			children = (
+				F7322D2D008F1AEB0B2B7370 /* apr_memcache.c */,
+			);
+			path = memcache;
+			sourceTree = "<group>";
+		};
+		71E85C71436271682AB45D2D /* xlate */ = {
+			isa = PBXGroup;
+			children = (
+				9BB5F735851C19BFD4BA30BB /* xlate.c */,
+			);
+			path = xlate;
+			sourceTree = "<group>";
+		};
+		7E9DE174882DE5B2B383A7AF /* uri */ = {
+			isa = PBXGroup;
+			children = (
+				70DCF03852EFD5FEE1ACEE80 /* apr_uri.c */,
+			);
+			path = uri;
+			sourceTree = "<group>";
+		};
+		859FC19117DA35255E933D4D /* ldap */ = {
+			isa = PBXGroup;
+			children = (
+				B377DE1C1F3D40BCDF8A4F85 /* apr_ldap_stub.c */,
+				2B2BFAA4B7C10C86932ED2B9 /* apr_ldap_url.c */,
+			);
+			path = ldap;
+			sourceTree = "<group>";
+		};
+		9153A84D6DB29D800EC5D7AF /* dbm */ = {
+			isa = PBXGroup;
+			children = (
+				13BEF5202E7B78772390E637 /* sdbm */,
+				C80ADE1159BBD44B8CBEB703 /* apr_dbm.c */,
+				C5AFC3994EF6923DC3C1E56F /* apr_dbm_sdbm.c */,
+			);
+			path = dbm;
+			sourceTree = "<group>";
+		};
+		979C566E272BA9AE9F234A73 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA251E3B936A90E67B9DC06F /* libaprutil.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7D15C163D1DA5D93716F657 /* encoding */ = {
+			isa = PBXGroup;
+			children = (
+				F0EA53E3A59B55EA6C3FB094 /* apr_base64.c */,
+			);
+			path = encoding;
+			sourceTree = "<group>";
+		};
+		B89E5C8D4661F946A39EB84C /* hooks */ = {
+			isa = PBXGroup;
+			children = (
+				E7B7434FC7F32D940A17AB9F /* apr_hooks.c */,
+			);
+			path = hooks;
+			sourceTree = "<group>";
+		};
+		B951F9EBC546C52C722A53AB /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				394100DA24A0AAB61BA038BB /* apr_date.c */,
+				18CED34C18D36595044E7EE2 /* apr_queue.c */,
+				21CFE067FEDBFE535808402D /* apr_reslist.c */,
+				7950DF85FBB068EEDCE4A132 /* apr_rmm.c */,
+				870D1E7C564D617D8D76134B /* apr_thread_pool.c */,
+				5262A863F471532FC80D1975 /* apu_dso.c */,
+				99BD2A5E2A0AB8B7389D85DF /* apu_version.c */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
+		B9570A13518D327B8766F962 /* buckets */ = {
+			isa = PBXGroup;
+			children = (
+				8E4EA433E5C701222F81B8E8 /* apr_brigade.c */,
+				E0E203A0D729266F7955EED0 /* apr_buckets.c */,
+				65AE7F8A9360CDCECDB97DC1 /* apr_buckets_alloc.c */,
+				893EA3270D96FB06C7F839F4 /* apr_buckets_eos.c */,
+				2420D118280F9546244DAA60 /* apr_buckets_file.c */,
+				4DA97383BA0A47DD9CD3630B /* apr_buckets_flush.c */,
+				ADF5FC69F825760EE0541ECC /* apr_buckets_heap.c */,
+				D8937AEBB18DBF1246C83CEC /* apr_buckets_mmap.c */,
+				9537152C7DA052F25727B179 /* apr_buckets_pipe.c */,
+				B0CEC924CC43C841721745BF /* apr_buckets_pool.c */,
+				A0CFD897AE4948D39C178F69 /* apr_buckets_refcount.c */,
+				2F40E9CDE0441010D67D003F /* apr_buckets_simple.c */,
+				99A86F44440EDF38F7BFB64B /* apr_buckets_socket.c */,
+			);
+			path = buckets;
+			sourceTree = "<group>";
+		};
+		D344CECB094EF3DE15762F11 /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				F2BE1F36D28FDEFAD9D9F413 /* aprutil.gyp */,
+				59D611E9786D9A705C71190C /* common.gypi */,
+				D43D355477E6F9C108F08A35 /* release.gypi */,
+				40FA6F956D114635BAC4D621 /* release_defaults.gypi */,
+				8F70B9AB863E467A39E99D13 /* release_impl.gypi */,
+				D4776B328115D903D85C824E /* release_impl_official.gypi */,
+			);
+			name = Build;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0910780CFDC0D32388F6F4DC /* aprutil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 74DFFED52706A974CB3724BF /* Build configuration list for PBXNativeTarget "aprutil" */;
+			buildPhases = (
+				9684FE0009905E3A95079D79 /* Sources */,
+				9A346B2C4B92E2BF56E3136D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D7D81535AAEDF411B22FDB05 /* PBXTargetDependency */,
+			);
+			name = aprutil;
+			productName = aprutil;
+			productReference = AA251E3B936A90E67B9DC06F /* libaprutil.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3C8F5A9184AF9F5CF7A9FC5E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = DC1BBEC495491F1766058867 /* Build configuration list for PBXProject "aprutil" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 1;
+			mainGroup = 4CCFA790181EF719414AC79D;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A5FDD0B56C7C83E0724A99F2 /* All */,
+				CB20D5E759E6B65B6AF6B040 /* include */,
+				0910780CFDC0D32388F6F4DC /* aprutil */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9684FE0009905E3A95079D79 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC778E0BA0BB85216758B8AA /* apr_brigade.c in Sources */,
+				B73B5E148F8827D949BC10E8 /* apr_buckets.c in Sources */,
+				04CB3A786FF08EDBF27F236C /* apr_buckets_alloc.c in Sources */,
+				0F7F70B2E57BAE2877EE8AF8 /* apr_buckets_eos.c in Sources */,
+				C9E324653F369243A04FB582 /* apr_buckets_file.c in Sources */,
+				F2EECFA8572339DFC4BCFC83 /* apr_buckets_flush.c in Sources */,
+				5E464FA5563746CC77D1945E /* apr_buckets_heap.c in Sources */,
+				3342BF11137889DC1CDED697 /* apr_buckets_mmap.c in Sources */,
+				F4954662033274797723C49A /* apr_buckets_pipe.c in Sources */,
+				6686438AF43539663680270F /* apr_buckets_pool.c in Sources */,
+				BD3AE71F796EDE722E42800C /* apr_buckets_refcount.c in Sources */,
+				5F832A4426A2EDF498047B93 /* apr_buckets_simple.c in Sources */,
+				17C8F38AAD8F655FA86F2445 /* apr_buckets_socket.c in Sources */,
+				0CFD626E12D123D42C003BC6 /* apr_dbm.c in Sources */,
+				2DBA1D569F5F7801D69FB24F /* apr_dbm_sdbm.c in Sources */,
+				1D67C4C0256A6C89B469B33B /* sdbm.c in Sources */,
+				6A29E5BD0A4BFB18CD8DDCA0 /* sdbm_hash.c in Sources */,
+				C5E8DC9C6B6CE33BE02365E7 /* sdbm_lock.c in Sources */,
+				91FEFA4B8AA1EAD2416F4FE2 /* sdbm_pair.c in Sources */,
+				A1B18846DBA21628003D7EB8 /* apr_base64.c in Sources */,
+				B6FE071FB372B28B62F00F4F /* apr_hooks.c in Sources */,
+				F62251897A95EC79A926FED4 /* apr_ldap_stub.c in Sources */,
+				B1A109312444E00F569DDA65 /* apr_ldap_url.c in Sources */,
+				DFA9C9A343F84963278A59CB /* apr_memcache.c in Sources */,
+				B922B245F6106C3EE3F59C0F /* apr_date.c in Sources */,
+				3653FD45E377D6ADFE74726A /* apr_queue.c in Sources */,
+				B158B3273ED8846D90DA3630 /* apr_reslist.c in Sources */,
+				3E63586FA03B5E82C79AF873 /* apr_rmm.c in Sources */,
+				E3413452DC6DE71057A1F39D /* apr_thread_pool.c in Sources */,
+				8FB2880B8E0F4D427ABCB8ED /* apu_dso.c in Sources */,
+				2ECB020853B19DB988468AA4 /* apu_version.c in Sources */,
+				BD0CD3EF896421C9F20E0916 /* apr_strmatch.c in Sources */,
+				3D6CC9EA40FAAD748B0E446D /* apr_uri.c in Sources */,
+				ADDE3F2E8B023F6D4925CFAA /* xlate.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4C5F3FBFFB128CA317E4A298 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0910780CFDC0D32388F6F4DC /* aprutil */;
+			targetProxy = 26F180761EC0FD58D655EB71 /* PBXContainerItemProxy */;
+		};
+		869221179D926C72CAD8BD72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB20D5E759E6B65B6AF6B040 /* include */;
+			targetProxy = 32F1232295E91A0FDC7070F7 /* PBXContainerItemProxy */;
+		};
+		D7D81535AAEDF411B22FDB05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB20D5E759E6B65B6AF6B040 /* include */;
+			targetProxy = AEE6235A3F67A760893725F9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0028FAAD7E751EAD322C4884 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"DYNAMIC_ANNOTATIONS_ENABLED=1\"",
+					"\"WTF_USE_DYNAMIC_ANNOTATIONS=1\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = ../../../third_party/chromium/src;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				OTHER_LDFLAGS = "-Wl,-search_paths_first";
+				PREBINDING = NO;
+				PRODUCT_NAME = include;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wendif-labels",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+				WARNING_CFLAGS_excluded = (
+					"-Wall",
+					"-Wextra",
+				);
+			};
+			name = Debug;
+		};
+		3F2654314EFB1E2E1C28E661 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = All;
+			};
+			name = Release;
+		};
+		446F6DE6045BB53F881B145F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = All;
+			};
+			name = Debug;
+		};
+		48E83DD6DB44D1C0EE251F0C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SDKROOT = macosx10.5;
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+				SYMROOT = ../../../xcodebuild;
+			};
+			name = Release;
+		};
+		4A210D08C3F633167E1D4B7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SDKROOT = macosx10.5;
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+				SYMROOT = ../../../xcodebuild;
+			};
+			name = Debug;
+		};
+		522F84A5E0A7FC4FBBBEFE1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEAD_CODE_STRIPPING = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"HAVE_CONFIG_H\"",
+					"\"DARWIN\"",
+					"\"SIGPROCMASK_SETS_THREAD_MASK\"",
+					"\"NDEBUG\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../third_party/chromium/src,
+					../../../third_party/apache/aprutil/src/include/private,
+					../../../third_party/apache/aprutil/gen/arch/mac/ia32/include/private,
+					../../../third_party/apache/aprutil/src/include,
+					../../../third_party/apache/aprutil/gen/arch/mac/ia32/include,
+					../../../third_party/apache/apr/src/include,
+					../../../third_party/apache/apr/src/include/arch/unix,
+					../../../third_party/apache/apr/gen/arch/mac/ia32/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				PREBINDING = NO;
+				PRODUCT_NAME = aprutil;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wendif-labels",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+				WARNING_CFLAGS_excluded = (
+					"-Wall",
+					"-Wextra",
+				);
+			};
+			name = Release;
+		};
+		911B56A4A5B1882945CBACC9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"HAVE_CONFIG_H\"",
+					"\"DARWIN\"",
+					"\"SIGPROCMASK_SETS_THREAD_MASK\"",
+					"\"DYNAMIC_ANNOTATIONS_ENABLED=1\"",
+					"\"WTF_USE_DYNAMIC_ANNOTATIONS=1\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../../third_party/chromium/src,
+					../../../third_party/apache/aprutil/src/include/private,
+					../../../third_party/apache/aprutil/gen/arch/mac/ia32/include/private,
+					../../../third_party/apache/aprutil/src/include,
+					../../../third_party/apache/aprutil/gen/arch/mac/ia32/include,
+					../../../third_party/apache/apr/src/include,
+					../../../third_party/apache/apr/src/include/arch/unix,
+					../../../third_party/apache/apr/gen/arch/mac/ia32/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				PREBINDING = NO;
+				PRODUCT_NAME = aprutil;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wendif-labels",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+				WARNING_CFLAGS_excluded = (
+					"-Wall",
+					"-Wextra",
+				);
+			};
+			name = Debug;
+		};
+		C184FAC3082B2E0968EDCF3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "\"NDEBUG\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = ../../../third_party/chromium/src;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				OTHER_LDFLAGS = "-Wl,-search_paths_first";
+				PREBINDING = NO;
+				PRODUCT_NAME = include;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wendif-labels",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+				WARNING_CFLAGS_excluded = (
+					"-Wall",
+					"-Wextra",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		74DFFED52706A974CB3724BF /* Build configuration list for PBXNativeTarget "aprutil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				911B56A4A5B1882945CBACC9 /* Debug */,
+				522F84A5E0A7FC4FBBBEFE1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		75F109FF11F305F06B5FAAC9 /* Build configuration list for PBXAggregateTarget "include" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0028FAAD7E751EAD322C4884 /* Debug */,
+				C184FAC3082B2E0968EDCF3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		CA1370D3C21111A999493FF9 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				446F6DE6045BB53F881B145F /* Debug */,
+				3F2654314EFB1E2E1C28E661 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		DC1BBEC495491F1766058867 /* Build configuration list for PBXProject "aprutil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A210D08C3F633167E1D4B7A /* Debug */,
+				48E83DD6DB44D1C0EE251F0C /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3C8F5A9184AF9F5CF7A9FC5E /* Project object */;
+}

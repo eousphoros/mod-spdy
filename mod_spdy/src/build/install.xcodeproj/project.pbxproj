@@ -1,0 +1,83 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXFileReference section */
+		2D38272961496AF7932EE4ED /* release_defaults.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_defaults.gypi; path = internal/release_defaults.gypi; sourceTree = "<group>"; };
+		4CC30BA34724DE2A699AEAED /* common.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; path = common.gypi; sourceTree = "<group>"; };
+		762E38F3BBA0EB0F4D269B05 /* release.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; path = release.gypi; sourceTree = "<group>"; };
+		807102A55EBC3B028D9353A2 /* release_impl_official.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_impl_official.gypi; path = internal/release_impl_official.gypi; sourceTree = "<group>"; };
+		8CA6D6BB9F7C8D1EFA78001D /* release_impl.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_impl.gypi; path = internal/release_impl.gypi; sourceTree = "<group>"; };
+		F20D6A87A972FA302AD53944 /* install.gyp */ = {isa = PBXFileReference; lastKnownFileType = text; path = install.gyp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		3D80D6105256C5F45486966F /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				4CC30BA34724DE2A699AEAED /* common.gypi */,
+				F20D6A87A972FA302AD53944 /* install.gyp */,
+				762E38F3BBA0EB0F4D269B05 /* release.gypi */,
+				2D38272961496AF7932EE4ED /* release_defaults.gypi */,
+				8CA6D6BB9F7C8D1EFA78001D /* release_impl.gypi */,
+				807102A55EBC3B028D9353A2 /* release_impl_official.gypi */,
+			);
+			name = Build;
+			sourceTree = "<group>";
+		};
+		8372D6DB2657EE7E3E1E636F = {
+			isa = PBXGroup;
+			children = (
+				3D80D6105256C5F45486966F /* Build */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		FD0F5106FD73CBEFA761275F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 0C50D04C837EACFF6A6FF167 /* Build configuration list for PBXProject "install" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 1;
+			mainGroup = 8372D6DB2657EE7E3E1E636F;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		1CA8C1E0DB8B70E5650470EC /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SDKROOT = macosx10.5;
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+				SYMROOT = ../xcodebuild;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0C50D04C837EACFF6A6FF167 /* Build configuration list for PBXProject "install" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CA8C1E0DB8B70E5650470EC /* Default */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FD0F5106FD73CBEFA761275F /* Project object */;
+}

@@ -1,0 +1,487 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		A929EE4E05645ACA871D5AEF /* All */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 77720458488C092201592CF9 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildPhases = (
+			);
+			dependencies = (
+				24BAF59FF46F2FB42E3D9183 /* PBXTargetDependency */,
+				CF5473C78E0BACD778D1029F /* PBXTargetDependency */,
+			);
+			name = All;
+			productName = All;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		0600FC88768D550A440248C6 /* spdy_framer.cc in Sources */ = {isa = PBXBuildFile; fileRef = A5B4187A48EA648BAF847AE5 /* spdy_framer.cc */; };
+		5D01B439B706C9A3F7712291 /* function.cc in Sources */ = {isa = PBXBuildFile; fileRef = 15ACB9720E8FEBF379374D32 /* function.cc */; };
+		8E6B8A9E9CD27A38CA65EE93 /* spdy_frame_reader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 21DE64A628C8316773C67EDA /* spdy_frame_reader.cc */; };
+		AD813CE389E9929FA0B141B8 /* buffered_spdy_framer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 62FACE683225ECAF970E3DBC /* buffered_spdy_framer.cc */; };
+		BC7E8F36400C0DC26D084077 /* spdy_frame_builder.cc in Sources */ = {isa = PBXBuildFile; fileRef = A093126521D55A5263E55A37 /* spdy_frame_builder.cc */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2628216D63630505168D1017 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ED2F7CDE398502116839F258 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 23109CFF5F0916ED3476D11E;
+			remoteInfo = instaweb_util;
+		};
+		BB4C0DD09AA5863B009A00E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ED2F7CDE398502116839F258 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2AAA3976D983A0007C18A459;
+			remoteInfo = spdy;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		15ACB9720E8FEBF379374D32 /* function.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = function.cc; sourceTree = "<group>"; };
+		174CD99B63D9D8EF0F61FF1C /* net.gyp */ = {isa = PBXFileReference; lastKnownFileType = text; path = net.gyp; sourceTree = "<group>"; };
+		21DE64A628C8316773C67EDA /* spdy_frame_reader.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spdy_frame_reader.cc; sourceTree = "<group>"; };
+		2D463E5E5AAF6CF2E5A57CA3 /* release.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release.gypi; path = ../build/release.gypi; sourceTree = "<group>"; };
+		37C2A1A72A10E59143ABD966 /* release_impl_official.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_impl_official.gypi; path = ../build/internal/release_impl_official.gypi; sourceTree = "<group>"; };
+		427C065D467EECB24D1B2661 /* libspdy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libspdy.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D050B19D438226328FC16C7 /* libinstaweb_util.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libinstaweb_util.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		55D0FFB8AA6D9364357B5735 /* common.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = common.gypi; path = ../build/common.gypi; sourceTree = "<group>"; };
+		62FACE683225ECAF970E3DBC /* buffered_spdy_framer.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = buffered_spdy_framer.cc; sourceTree = "<group>"; };
+		A093126521D55A5263E55A37 /* spdy_frame_builder.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spdy_frame_builder.cc; sourceTree = "<group>"; };
+		A5B4187A48EA648BAF847AE5 /* spdy_framer.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spdy_framer.cc; sourceTree = "<group>"; };
+		B0E93D71C5E451D7D61939E2 /* release_defaults.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_defaults.gypi; path = ../build/internal/release_defaults.gypi; sourceTree = "<group>"; };
+		E1A6C28F4CC38CE7758C97B6 /* release_impl.gypi */ = {isa = PBXFileReference; lastKnownFileType = text; name = release_impl.gypi; path = ../build/internal/release_impl.gypi; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0B7754EAA9A38123E29A87D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F385CD16F438C7903869FCE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		043651772B459B0D0BCC1D76 = {
+			isa = PBXGroup;
+			children = (
+				50C08C6B2FC5C40CD1D5B71B /* Source */,
+				6CC7EA295133F8A40C68A087 /* Products */,
+				0BE19EEA9EF658E4DA980D1C /* Build */,
+			);
+			sourceTree = "<group>";
+		};
+		0BE19EEA9EF658E4DA980D1C /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				55D0FFB8AA6D9364357B5735 /* common.gypi */,
+				174CD99B63D9D8EF0F61FF1C /* net.gyp */,
+				2D463E5E5AAF6CF2E5A57CA3 /* release.gypi */,
+				B0E93D71C5E451D7D61939E2 /* release_defaults.gypi */,
+				E1A6C28F4CC38CE7758C97B6 /* release_impl.gypi */,
+				37C2A1A72A10E59143ABD966 /* release_impl_official.gypi */,
+			);
+			name = Build;
+			sourceTree = "<group>";
+		};
+		50C08C6B2FC5C40CD1D5B71B /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				7F75F3BF9F00574C655CDDBA /* ../third_party/chromium/src/net/spdy */,
+				908FFABE08D251C88F9A8615 /* instaweb/util */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		6CC7EA295133F8A40C68A087 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4D050B19D438226328FC16C7 /* libinstaweb_util.a */,
+				427C065D467EECB24D1B2661 /* libspdy.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7F75F3BF9F00574C655CDDBA /* ../third_party/chromium/src/net/spdy */ = {
+			isa = PBXGroup;
+			children = (
+				62FACE683225ECAF970E3DBC /* buffered_spdy_framer.cc */,
+				A093126521D55A5263E55A37 /* spdy_frame_builder.cc */,
+				21DE64A628C8316773C67EDA /* spdy_frame_reader.cc */,
+				A5B4187A48EA648BAF847AE5 /* spdy_framer.cc */,
+			);
+			path = ../third_party/chromium/src/net/spdy;
+			sourceTree = "<group>";
+		};
+		908FFABE08D251C88F9A8615 /* instaweb/util */ = {
+			isa = PBXGroup;
+			children = (
+				15ACB9720E8FEBF379374D32 /* function.cc */,
+			);
+			path = instaweb/util;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		23109CFF5F0916ED3476D11E /* instaweb_util */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B1897D5DF7044074E78AF27 /* Build configuration list for PBXNativeTarget "instaweb_util" */;
+			buildPhases = (
+				1B68F82AF00947062550D857 /* Sources */,
+				F385CD16F438C7903869FCE2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = instaweb_util;
+			productName = instaweb_util;
+			productReference = 4D050B19D438226328FC16C7 /* libinstaweb_util.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		2AAA3976D983A0007C18A459 /* spdy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6405505D07CFE80F45E572FC /* Build configuration list for PBXNativeTarget "spdy" */;
+			buildPhases = (
+				24B4BA427BA50750076E3822 /* Sources */,
+				0B7754EAA9A38123E29A87D8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = spdy;
+			productName = spdy;
+			productReference = 427C065D467EECB24D1B2661 /* libspdy.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ED2F7CDE398502116839F258 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 8D9FC52948A0DD1D955BE14F /* Build configuration list for PBXProject "net" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 1;
+			mainGroup = 043651772B459B0D0BCC1D76;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A929EE4E05645ACA871D5AEF /* All */,
+				23109CFF5F0916ED3476D11E /* instaweb_util */,
+				2AAA3976D983A0007C18A459 /* spdy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1B68F82AF00947062550D857 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D01B439B706C9A3F7712291 /* function.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		24B4BA427BA50750076E3822 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD813CE389E9929FA0B141B8 /* buffered_spdy_framer.cc in Sources */,
+				BC7E8F36400C0DC26D084077 /* spdy_frame_builder.cc in Sources */,
+				8E6B8A9E9CD27A38CA65EE93 /* spdy_frame_reader.cc in Sources */,
+				0600FC88768D550A440248C6 /* spdy_framer.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		24BAF59FF46F2FB42E3D9183 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 23109CFF5F0916ED3476D11E /* instaweb_util */;
+			targetProxy = 2628216D63630505168D1017 /* PBXContainerItemProxy */;
+		};
+		CF5473C78E0BACD778D1029F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2AAA3976D983A0007C18A459 /* spdy */;
+			targetProxy = BB4C0DD09AA5863B009A00E9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		020CFC67E8D108D1807CC369 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SDKROOT = macosx10.5;
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+				SYMROOT = ../xcodebuild;
+			};
+			name = Debug;
+		};
+		021B7A3179968DA456D4A802 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEAD_CODE_STRIPPING = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"__STDC_FORMAT_MACROS\"",
+					"\"NDEBUG\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = (
+					../third_party/chromium/src,
+					..,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				PREBINDING = NO;
+				PRODUCT_NAME = instaweb_util;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wendif-labels",
+					"-Wextra",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+			};
+			name = Release;
+		};
+		19CC27825B8218798F276744 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"__STDC_FORMAT_MACROS\"",
+					"\"DYNAMIC_ANNOTATIONS_ENABLED=1\"",
+					"\"WTF_USE_DYNAMIC_ANNOTATIONS=1\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = (
+					../third_party/chromium/src,
+					..,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				PREBINDING = NO;
+				PRODUCT_NAME = instaweb_util;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wendif-labels",
+					"-Wextra",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+			};
+			name = Debug;
+		};
+		44CA8C18708DA02327DF98E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEAD_CODE_STRIPPING = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"__STDC_FORMAT_MACROS\"",
+					"\"NDEBUG\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = (
+					../third_party/chromium/src,
+					..,
+					../third_party/zlib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				PREBINDING = NO;
+				PRODUCT_NAME = spdy;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wendif-labels",
+					"-Wextra",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+			};
+			name = Release;
+		};
+		75037F3D4A7821AD5DEED931 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_CW_ASM_SYNTAX = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_PASCAL_STRINGS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"__STDC_FORMAT_MACROS\"",
+					"\"DYNAMIC_ANNOTATIONS_ENABLED=1\"",
+					"\"WTF_USE_DYNAMIC_ANNOTATIONS=1\"",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				HEADER_SEARCH_PATHS = (
+					../third_party/chromium/src,
+					..,
+					../third_party/zlib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_CFLAGS = "-fno-strict-aliasing";
+				PREBINDING = NO;
+				PRODUCT_NAME = spdy;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wendif-labels",
+					"-Wextra",
+					"-Wno-unused-parameter",
+					"-Wno-missing-field-initializers",
+				);
+			};
+			name = Debug;
+		};
+		C6232F8C5693B6D277A11054 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = All;
+			};
+			name = Release;
+		};
+		E1E9F59829B26213F1F5A19C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = All;
+			};
+			name = Debug;
+		};
+		E36A3F17E5E2695400AA502E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SDKROOT = macosx10.5;
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+				SYMROOT = ../xcodebuild;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5B1897D5DF7044074E78AF27 /* Build configuration list for PBXNativeTarget "instaweb_util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19CC27825B8218798F276744 /* Debug */,
+				021B7A3179968DA456D4A802 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		6405505D07CFE80F45E572FC /* Build configuration list for PBXNativeTarget "spdy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75037F3D4A7821AD5DEED931 /* Debug */,
+				44CA8C18708DA02327DF98E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		77720458488C092201592CF9 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1E9F59829B26213F1F5A19C /* Debug */,
+				C6232F8C5693B6D277A11054 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		8D9FC52948A0DD1D955BE14F /* Build configuration list for PBXProject "net" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				020CFC67E8D108D1807CC369 /* Debug */,
+				E36A3F17E5E2695400AA502E /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ED2F7CDE398502116839F258 /* Project object */;
+}
