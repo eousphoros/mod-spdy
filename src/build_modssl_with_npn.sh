@@ -33,15 +33,19 @@ if [ -f $MODSSL_SO_DESTPATH ]; then
 fi
 
 if [ -z "$BUILDROOT" ]; then
-  BUILDROOT=$(mktemp -d)
-  REMOVE_BUILDROOT=1
-else
-  REMOVE_BUILDROOT=0
+  BUILDROOT=$(pwd)/mod_ssl
 fi
+
+REMOVE_BUILDROOT=0
 
 if [ ! -d "$BUILDROOT" ]; then
   echo "Not a directory: $BUILDROOT"
-  exit 1
+  echo "Attempting to create: $BUILDROOT"
+  mkdir -p $BUILDROOT
+  if [ "$0" != "0" ]; then
+    echo "Failed to create: $BUILDROOT"
+    exit 1
+  fi
 fi
 
 # Convert BUILDROOT to an absolute path.
@@ -93,8 +97,8 @@ function uncompress_file {
   fi
 }
 
-OPENSSL_SRC_TGZ_URL="http://www.openssl.org/source/openssl-1.0.1c.tar.gz"
-APACHE_HTTPD_SRC_TGZ_URL="http://archive.apache.org/dist/httpd/httpd-2.2.22.tar.gz"
+OPENSSL_SRC_TGZ_URL="http://www.openssl.org/source/openssl-1.0.1f.tar.gz"
+APACHE_HTTPD_SRC_TGZ_URL="http://archive.apache.org/dist/httpd/httpd-2.4.7.tar.gz"
 APACHE_HTTPD_MODSSL_NPN_PATCH_PATH="$(dirname $0)/scripts/mod_ssl_with_npn.patch"
 
 OPENSSL_SRC_TGZ=$(basename $OPENSSL_SRC_TGZ_URL)
@@ -112,8 +116,8 @@ cp $APACHE_HTTPD_MODSSL_NPN_PATCH_PATH $BUILDROOT/$APACHE_HTTPD_MODSSL_NPN_PATCH
 
 pushd $BUILDROOT >/dev/null
 
-download_file $OPENSSL_SRC_TGZ_URL $OPENSSL_SRC_TGZ ae412727c8c15b67880aef7bd2999b2e
-download_file $APACHE_HTTPD_SRC_TGZ_URL $APACHE_HTTPD_SRC_TGZ d77fa5af23df96a8af68ea8114fa6ce1
+download_file $OPENSSL_SRC_TGZ_URL $OPENSSL_SRC_TGZ f26b09c028a0541cab33da697d522b25
+download_file $APACHE_HTTPD_SRC_TGZ_URL $APACHE_HTTPD_SRC_TGZ 9272aadaa2d702f6ae5758641d830d7f
 
 echo ""
 
