@@ -38,6 +38,9 @@
  */
 
 
+#define APR_COPYRIGHT "Copyright (c) 2013 The Apache Software " \
+                      "Foundation or its licensors, as applicable."
+
 /* The numeric compile-time version constants. These constants are the
  * authoritative version numbers for APR. 
  */
@@ -53,20 +56,20 @@
  * Minor API changes that do not cause binary compatibility problems.
  * Reset to 0 when upgrading APR_MAJOR_VERSION
  */
-#define APR_MINOR_VERSION       4
+#define APR_MINOR_VERSION       5
 
 /** patch level 
  * The Patch Level never includes API changes, simply bug fixes.
  * Reset to 0 when upgrading APR_MINOR_VERSION
  */
-#define APR_PATCH_VERSION       2
+#define APR_PATCH_VERSION       0
 
 /** 
  * The symbol APR_IS_DEV_VERSION is only defined for internal,
  * "development" copies of APR.  It is undefined for released versions
  * of APR.
  */
-/* #undef APR_IS_DEV_VERSION */
+/* #define APR_IS_DEV_VERSION */
 
 /**
  * Check at compile time if the APR version is at least a certain
@@ -87,7 +90,9 @@
 
 #if defined(APR_IS_DEV_VERSION) || defined(DOXYGEN)
 /** Internal: string form of the "is dev" flag */
+#ifndef APR_IS_DEV_STRING
 #define APR_IS_DEV_STRING "-dev"
+#endif
 #else
 #define APR_IS_DEV_STRING ""
 #endif

@@ -51,6 +51,12 @@ static void set_socket_vars(apr_socket_t *sock, int family, int type, int protoc
     sock->protocol = protocol;
     apr_sockaddr_vars_set(sock->local_addr, family, 0);
     apr_sockaddr_vars_set(sock->remote_addr, family, 0);
+#if APR_HAVE_IPV6
+    /* hard-coded behavior for older Windows IPv6 */
+    if (apr_os_level < APR_WIN_VISTA && family == AF_INET6) {
+        apr_set_option(sock, APR_IPV6_V6ONLY, 1);
+    }
+#endif
 }                                                                                                  
 static void alloc_socket(apr_socket_t **new, apr_pool_t *p)
 {
@@ -81,7 +87,9 @@ APR_DECLARE(apr_status_t) apr_socket_create(apr_socket_t **new, int family,
                                             int type, int protocol, 
                                             apr_pool_t *cont)
 {
+#if APR_HAVE_IPV6
     int downgrade = (family == AF_UNSPEC);
+#endif
 
     if (family == AF_UNSPEC) {
 #if APR_HAVE_IPV6
@@ -251,6 +259,7 @@ APR_DECLARE(apr_status_t) apr_socket_accept(apr_socket_t **new,
     (*new)->remote_addr->salen = sizeof((*new)->remote_addr->sa);
     memcpy (&(*new)->remote_addr->sa, &sa, salen);
     *(*new)->local_addr = *sock->local_addr;
+    (*new)->remote_addr_unknown = 0;
 
     /* The above assignment just overwrote the pool entry. Setting the local_addr 
        pool for the accepted socket back to what it should be.  Otherwise all 
@@ -302,6 +311,47 @@ APR_DECLARE(apr_status_t) apr_socket_accept(apr_socket_t **new,
     return APR_SUCCESS;
 }
 
+static apr_status_t wait_for_connect(apr_socket_t *sock)
+{
+    int rc;
+    struct timeval tv, *tvptr;
+    fd_set wfdset, efdset;
+
+    /* wait for the connect to complete or timeout */
+    FD_ZERO(&wfdset);
+    FD_SET(sock->socketdes, &wfdset);
+    FD_ZERO(&efdset);
+    FD_SET(sock->socketdes, &efdset);
+
+    if (sock->timeout < 0) {
+        tvptr = NULL;
+    }
+    else {
+        /* casts for winsock/timeval definition */
+        tv.tv_sec =  (long)apr_time_sec(sock->timeout);
+        tv.tv_usec = (int)apr_time_usec(sock->timeout);
+        tvptr = &tv;
+    }
+    rc = select(FD_SETSIZE+1, NULL, &wfdset, &efdset, tvptr);
+    if (rc == SOCKET_ERROR) {
+        return apr_get_netos_error();
+    }
+    else if (!rc) {
+        return APR_FROM_OS_ERROR(WSAETIMEDOUT);
+    }
+    /* Evaluate the efdset */
+    if (FD_ISSET(sock->socketdes, &efdset)) {
+        /* The connect failed. */
+        int rclen = sizeof(rc);
+        if (getsockopt(sock->socketdes, SOL_SOCKET, SO_ERROR, (char*) &rc, &rclen)) {
+            return apr_get_netos_error();
+        }
+        return APR_FROM_OS_ERROR(rc);
+    }
+
+    return APR_SUCCESS;
+}
+
 APR_DECLARE(apr_status_t) apr_socket_connect(apr_socket_t *sock, 
                                              apr_sockaddr_t *sa)
 {
@@ -313,59 +363,41 @@ APR_DECLARE(apr_status_t) apr_socket_connect(apr_socket_t *sock,
 
     if (connect(sock->socketdes, (const struct sockaddr *)&sa->sa.sin,
                 sa->salen) == SOCKET_ERROR) {
-        int rc;
-        struct timeval tv, *tvptr;
-        fd_set wfdset, efdset;
-
         rv = apr_get_netos_error();
-        if (rv != APR_FROM_OS_ERROR(WSAEWOULDBLOCK)) {
-            return rv;
-        }
+    }
+    else {
+        rv = APR_SUCCESS;
+    }
 
+    if (rv == APR_FROM_OS_ERROR(WSAEWOULDBLOCK)) {
         if (sock->timeout == 0) {
             /* Tell the app that the connect is in progress...
              * Gotta play some games here.  connect on Unix will return 
              * EINPROGRESS under the same circumstances that Windows 
              * returns WSAEWOULDBLOCK. Do some adhoc canonicalization...
              */
-            return APR_FROM_OS_ERROR(WSAEINPROGRESS);
-        }
-
-        /* wait for the connect to complete or timeout */
-        FD_ZERO(&wfdset);
-        FD_SET(sock->socketdes, &wfdset);
-        FD_ZERO(&efdset);
-        FD_SET(sock->socketdes, &efdset);
-
-        if (sock->timeout < 0) {
-            tvptr = NULL;
+            rv = APR_FROM_OS_ERROR(WSAEINPROGRESS);
         }
         else {
-            /* casts for winsock/timeval definition */
-            tv.tv_sec =  (long)apr_time_sec(sock->timeout);
-            tv.tv_usec = (int)apr_time_usec(sock->timeout);
-            tvptr = &tv;
-        }
-        rc = select(FD_SETSIZE+1, NULL, &wfdset, &efdset, tvptr);
-        if (rc == SOCKET_ERROR) {
-            return apr_get_netos_error();
-        }
-        else if (!rc) {
-            return APR_FROM_OS_ERROR(WSAETIMEDOUT);
-        }
-        /* Evaluate the efdset */
-        if (FD_ISSET(sock->socketdes, &efdset)) {
-            /* The connect failed. */
-            int rclen = sizeof(rc);
-            if (getsockopt(sock->socketdes, SOL_SOCKET, SO_ERROR, (char*) &rc, &rclen)) {
-                return apr_get_netos_error();
+            rv = wait_for_connect(sock);
+            if (rv != APR_SUCCESS) {
+                return rv;
             }
-            return APR_FROM_OS_ERROR(rc);
         }
     }
-    /* connect was OK .. amazing */
-    sock->remote_addr = sa;
+
+    if (memcmp(sa->ipaddr_ptr, generic_inaddr_any, sa->ipaddr_len)) {
+        /* A real remote address was passed in.  If the unspecified
+         * address was used, the actual remote addr will have to be
+         * determined using getpeername() if required. */
+        sock->remote_addr_unknown = 0;
+
+        /* Copy the address structure details in. */
+        sock->remote_addr = sa;
+    }
+
     if (sock->local_addr->sa.sin.sin_port == 0) {
+        /* connect() got us an ephemeral port */
         sock->local_port_unknown = 1;
     }
     if (!memcmp(sock->local_addr->ipaddr_ptr,
@@ -376,6 +408,11 @@ APR_DECLARE(apr_status_t) apr_socket_connect(apr_socket_t *sock,
          */
         sock->local_interface_unknown = 1;
     }
+
+    if (rv != APR_SUCCESS && rv != APR_FROM_OS_ERROR(WSAEISCONN)) {
+        return rv;
+    }
+
     return APR_SUCCESS;
 }
 

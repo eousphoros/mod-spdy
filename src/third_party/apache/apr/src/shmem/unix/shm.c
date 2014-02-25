@@ -304,7 +304,7 @@ APR_DECLARE(apr_status_t) apr_shm_create(apr_shm_t **m,
 
         /* FIXME: APR_OS_DEFAULT is too permissive, switch to 600 I think. */
         status = apr_file_open(&file, filename, 
-                               APR_WRITE | APR_CREATE | APR_EXCL,
+                               APR_FOPEN_WRITE | APR_FOPEN_CREATE | APR_FOPEN_EXCL,
                                APR_OS_DEFAULT, pool);
         if (status != APR_SUCCESS) {
             return status;
@@ -314,26 +314,31 @@ APR_DECLARE(apr_status_t) apr_shm_create(apr_shm_t **m,
          * exist before calling ftok(). */
         shmkey = ftok(filename, 1);
         if (shmkey == (key_t)-1) {
+            apr_file_close(file);
             return errno;
         }
 
         if ((new_m->shmid = shmget(shmkey, new_m->realsize,
                                    SHM_R | SHM_W | IPC_CREAT | IPC_EXCL)) < 0) {
+            apr_file_close(file);
             return errno;
         }
 
         if ((new_m->base = shmat(new_m->shmid, NULL, 0)) == (void *)-1) {
+            apr_file_close(file);
             return errno;
         }
         new_m->usable = new_m->base;
 
         if (shmctl(new_m->shmid, IPC_STAT, &shmbuf) == -1) {
+            apr_file_close(file);
             return errno;
         }
         apr_uid_current(&uid, &gid, pool);
         shmbuf.shm_perm.uid = uid;
         shmbuf.shm_perm.gid = gid;
         if (shmctl(new_m->shmid, IPC_SET, &shmbuf) == -1) {
+            apr_file_close(file);
             return errno;
         }
 
@@ -341,6 +346,7 @@ APR_DECLARE(apr_status_t) apr_shm_create(apr_shm_t **m,
         status = apr_file_write(file, (const void *)&reqsize,
                                 &nbytes);
         if (status != APR_SUCCESS) {
+            apr_file_close(file);
             return status;
         }
         status = apr_file_close(file);
@@ -357,6 +363,15 @@ APR_DECLARE(apr_status_t) apr_shm_create(apr_shm_t **m,
         return APR_ENOTIMPL;
 #endif
     }
+}
+
+APR_DECLARE(apr_status_t) apr_shm_create_ex(apr_shm_t **m, 
+                                            apr_size_t reqsize, 
+                                            const char *filename, 
+                                            apr_pool_t *p,
+                                            apr_int32_t flags)
+{
+    return apr_shm_create(m, reqsize, filename, p);
 }
 
 APR_DECLARE(apr_status_t) apr_shm_remove(const char *filename,
@@ -378,7 +393,7 @@ APR_DECLARE(apr_status_t) apr_shm_remove(const char *filename,
     return APR_SUCCESS;
 #elif APR_USE_SHMEM_SHMGET
     /* Presume that the file already exists; just open for writing */    
-    status = apr_file_open(&file, filename, APR_WRITE,
+    status = apr_file_open(&file, filename, APR_FOPEN_WRITE,
                            APR_OS_DEFAULT, pool);
     if (status) {
         return status;
@@ -522,7 +537,7 @@ APR_DECLARE(apr_status_t) apr_shm_attach(apr_shm_t **m,
         new_m = apr_palloc(pool, sizeof(apr_shm_t));
 
         status = apr_file_open(&file, filename, 
-                               APR_READ, APR_OS_DEFAULT, pool);
+                               APR_FOPEN_READ, APR_OS_DEFAULT, pool);
         if (status != APR_SUCCESS) {
             return status;
         }
@@ -562,6 +577,14 @@ APR_DECLARE(apr_status_t) apr_shm_attach(apr_shm_t **m,
         return APR_ENOTIMPL;
 #endif
     }
+}
+
+APR_DECLARE(apr_status_t) apr_shm_attach_ex(apr_shm_t **m,
+                                            const char *filename,
+                                            apr_pool_t *pool,
+                                            apr_int32_t flags)
+{
+    return apr_shm_attach(m, filename, pool);
 }
 
 APR_DECLARE(apr_status_t) apr_shm_detach(apr_shm_t *m)

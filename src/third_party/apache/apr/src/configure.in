@@ -8,8 +8,8 @@ AC_PREREQ(2.59)
 
 AC_INIT(build/apr_common.m4)
 AC_CONFIG_HEADER(include/arch/unix/apr_private.h)
-AC_CONFIG_MACRO_DIR(build)
 AC_CONFIG_AUX_DIR(build)
+AC_CONFIG_MACRO_DIR(build)
 
 dnl 
 dnl Include our own M4 macros along with those for libtool
@@ -35,11 +35,65 @@ AH_TOP([
 dnl Hard-coded inclusion at the tail end of apr_private.h:
 AH_BOTTOM([
 /* switch this on if we have a BeOS version below BONE */
-#if BEOS && !HAVE_BONE_VERSION
+#if defined(BEOS) && !defined(HAVE_BONE_VERSION)
 #define BEOS_R5 1
 #else
 #define BEOS_BONE 1
 #endif
+
+/*
+ * Darwin 10's default compiler (gcc42) builds for both 64 and
+ * 32 bit architectures unless specifically told not to.
+ * In those cases, we need to override types depending on how
+ * we're being built at compile time.
+ * NOTE: This is an ugly work-around for Darwin's
+ * concept of universal binaries, a single package
+ * (executable, lib, etc...) which contains both 32
+ * and 64 bit versions. The issue is that if APR is
+ * built universally, if something else is compiled
+ * against it, some bit sizes will depend on whether
+ * it is 32 or 64 bit. This is determined by the __LP64__
+ * flag. Since we need to support both, we have to
+ * handle OS X unqiuely.
+ */
+#ifdef DARWIN_10
+
+#undef APR_OFF_T_STRFN
+#undef APR_INT64_STRFN
+#undef SIZEOF_LONG
+#undef SIZEOF_SIZE_T
+#undef SIZEOF_SSIZE_T
+#undef SIZEOF_VOIDP
+#undef SIZEOF_STRUCT_IOVEC
+
+#ifdef __LP64__
+ #define APR_INT64_STRFN strtol
+ #define SIZEOF_LONG    8
+ #define SIZEOF_SIZE_T  8
+ #define SIZEOF_SSIZE_T 8
+ #define SIZEOF_VOIDP   8
+ #define SIZEOF_STRUCT_IOVEC 16
+#else
+ #define APR_INT64_STRFN strtoll
+ #define SIZEOF_LONG    4
+ #define SIZEOF_SIZE_T  4
+ #define SIZEOF_SSIZE_T 4
+ #define SIZEOF_VOIDP   4
+ #define SIZEOF_STRUCT_IOVEC 8
+#endif
+
+#undef APR_OFF_T_STRFN
+#define APR_OFF_T_STRFN APR_INT64_STRFN
+ 
+
+#undef SETPGRP_VOID
+#ifdef __DARWIN_UNIX03
+ #define SETPGRP_VOID 1
+#else
+/* #undef SETPGRP_VOID */
+#endif
+ 
+#endif /* DARWIN_10 */
 
 /*
  * Include common private declarations.
@@ -129,6 +183,12 @@ dnl can only be used once within a configure script, so this prevents a
 dnl preload section from invoking the macro to get compiler info.
 AC_PROG_CC
 
+dnl AC_PROG_SED is only avaliable in recent autoconf versions.
+dnl Use AC_CHECK_PROG instead if AC_PROG_SED is not present.
+ifdef([AC_PROG_SED],
+      [AC_PROG_SED],
+      [AC_CHECK_PROG(SED, sed, sed)])
+
 dnl Preload
 APR_PRELOAD
 
@@ -171,6 +231,11 @@ echo "performing libtool configuration..."
 
 AC_ARG_ENABLE(experimental-libtool,[  --enable-experimental-libtool Use experimental custom libtool],
   [experimental_libtool=$enableval],[experimental_libtool=no])
+
+dnl Workarounds for busted Libtool 2.x when we don't call AC_PROG_LIBTOOL
+if test "x$Xsed" = "x"; then
+  Xsed="$SED -e 1s/^X//"
+fi
 
 case $host in
 *-os2*)
@@ -217,7 +282,7 @@ AC_ARG_WITH(libtool, [  --without-libtool       avoid using libtool to link the 
 if test "x$use_libtool" = "xyes"; then
       lt_compile='$(LIBTOOL) $(LTFLAGS) --mode=compile $(COMPILE) -o $@ -c $< && touch $@'
       LT_VERSION="-version-info `$get_version libtool $version_hdr APR`"
-      link="\$(LIBTOOL) \$(LTFLAGS) --mode=link \$(LT_LDFLAGS) \$(COMPILE) \$(LT_VERSION) \$(ALL_LDFLAGS) -o \$@"
+      link="\$(LIBTOOL) \$(LTFLAGS) --mode=link \$(COMPILE) \$(LT_LDFLAGS) \$(LT_VERSION) \$(ALL_LDFLAGS) -o \$@"
       so_ext='lo'
       lib_target='-rpath $(libdir) $(OBJECTS)'
       export_lib_target='-rpath \$(libdir) \$(OBJECTS)'
@@ -232,6 +297,9 @@ fi
 case $host in
     *-solaris2*)
         apr_platform_runtime_link_flag="-R"
+        ;;
+    *-mingw* | *-cygwin*)
+        LT_LDFLAGS="$LT_LDFLAGS -no-undefined"
         ;;
     *)
         ;;
@@ -367,6 +435,18 @@ case "$host:$CC" in
 	APR_SETVAR(CC,mwcc)
 	APR_SETVAR(AR,ar)
 	;;
+    dnl If building static APR, both the APR build and the app build
+    dnl need -DAPR_DECLARE_STATIC to generate the right linkage from    
+    dnl APR_DECLARE et al.
+    dnl If building dynamic APR, the APR build needs APR_DECLARE_EXPORT
+    dnl and the app build should have neither define.
+    *-mingw* | *-cygwin*)
+        if test "$enable_shared" = "yes"; then
+            APR_ADDTO(INTERNAL_CPPFLAGS, -DAPR_DECLARE_EXPORT)
+        else
+            APR_ADDTO(CPPFLAGS, -DAPR_DECLARE_STATIC)
+        fi
+        ;;
 esac
 
 AC_CACHE_CHECK([whether the compiler provides atomic builtins], [ap_cv_atomic_builtins],
@@ -476,11 +556,7 @@ case $host in
        eolstr="\\n"
        ;;
    *mingw*)
-       APR_ADDTO(CPPFLAGS,-DWIN32)
        OSDIR="win32"
-       ac_cv_file__dev_zero="no"
-       ac_cv_func_setpgrp_void="no"
-       apr_cv_tcp_nodelay_with_cork="no"
        enable_threads="system_threads"
        eolstr="\\r\\n"
        file_as_socket=0
@@ -489,7 +565,6 @@ case $host in
        ;;
    *cygwin*)
        OSDIR="unix"
-       APR_ADDTO(CPPFLAGS,-DCYGWIN)
        enable_threads="no"
        eolstr="\\n"
        ;;
@@ -589,7 +664,15 @@ case $host in
         fi
         ;;
     *linux*)
-        os_version=`uname -r | sed -e 's/\(.\)\.\(.\)\.\(.\).*/\1\2\3/'`
+        os_major=[`uname -r | sed -e 's/\([1-9][0-9]*\)\..*/\1/'`]
+        os_minor=[`uname -r | sed -e 's/[1-9][0-9]*\.\([0-9]\+\)\..*/\1/'`]
+        if test $os_major -lt 2 -o \( $os_major -eq 2 -a $os_minor -lt 4 \); then
+            AC_MSG_WARN([Configured for pre-2.4 Linux $os_major.$os_minor])
+            os_pre24linux=1
+        else
+            os_pre24linux=0
+            AC_MSG_NOTICE([Configured for Linux $os_major.$os_minor])
+        fi
         ;;
     *os390)
         os_version=`uname -r | sed -e 's/\.//g'`
@@ -608,16 +691,8 @@ dnl without the extra " " in that case, but they didn't do that.  So, we
 dnl end up LIBS="-lm -lcrypt -lnsl  -ldl" which is an annoyance.
 case $host in
    *mingw*)
-      dnl APR_ADDTO(LIBS,[-lmsvcrt --lshell32 -ladvapi32 -lws2_32])
-
-      AC_CHECK_LIB(msvcrt, getpid)
-      APR_CHECK_DLL_FUNC(kernel32, SetErrorMode@4)
-      APR_CHECK_DLL_FUNC(advapi32, GetSecurityInfo@32)
-      APR_CHECK_DLL_FUNC(ws2_32, gethostbyname@4)
-      APR_CHECK_DLL_FUNC(shell32, CommandLineToArgvW@8)
-      APR_CHECK_DLL_FUNC(kernel32,[CreateFileMappingA@24],
-         [ac_cv_func_CreateFileMapping=$ac_cv_lib_kernel32_CreateFileMappingA])
-      APR_CHECK_DLL_FUNC(rpcrt4,[UuidCreate@4])
+      APR_ADDTO(LIBS,[-lshell32 -ladvapi32 -lws2_32 -lrpcrt4 -lmswsock])
+      ac_cv_func_CreateFileMapping=yes
       ;;
    *)
       AC_SEARCH_LIBS(gethostbyname, nsl)
@@ -820,78 +895,47 @@ if test "$apr_cv_dup3" = "yes"; then
    AC_DEFINE([HAVE_DUP3], 1, [Define if dup3 function is supported])
 fi
 
-# test for accept4
+# Test for accept4().  Create a non-blocking socket, bind it to
+# an unspecified port & address (kernel picks), and attempt to
+# call accept4() on it.  If the syscall is wired up (i.e. the
+# kernel is new enough), it should return EAGAIN.
 AC_CACHE_CHECK([for accept4 support], [apr_cv_accept4],
 [AC_TRY_RUN([
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/un.h>
 #include <sys/wait.h>
-#include <signal.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <errno.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-#define A4_SOCK "./apr_accept4_test_socket"
-
-int main()
+int main(int argc, char **argv)
 {
-    pid_t pid;
-    int fd;
-    struct sockaddr_un loc, rem;
-    socklen_t rem_sz;
+    int fd, flags;
+    struct sockaddr_in sin;
 
-    if ((pid = fork())) {
-        int status;
-
-        unlink(A4_SOCK);
-
-        if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
-            goto cleanup_failure2;
-
-        loc.sun_family = AF_UNIX;
-        strncpy(loc.sun_path, A4_SOCK, sizeof(loc.sun_path) - 1);
-
-        if (bind(fd, (struct sockaddr *) &loc,
-                 sizeof(struct sockaddr_un)) == -1)
-            goto cleanup_failure;
-
-        if (listen(fd, 5) == -1)
-            goto cleanup_failure;
-
-        rem_sz = sizeof(struct sockaddr_un);
-        if (accept4(fd, (struct sockaddr *) &rem, &rem_sz, 0) == -1) {
-            goto cleanup_failure;
-        }
-        else {
-            close(fd);
-            waitpid(pid, &status, 0);
-            unlink(A4_SOCK);
-            return 0;
-        }
-
-cleanup_failure:
-        close(fd);
-cleanup_failure2:
-        kill(pid, SIGKILL);
-        waitpid(pid, &status, 0);
-        unlink(A4_SOCK);
+    if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         return 1;
-    }
-    else {
-        if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
-            return 1; /* this will be bad: we'll hang */
+    flags = fcntl(fd, F_GETFL);
+    if (flags == -1 || fcntl(fd, F_SETFL, flags|O_NONBLOCK) == -1)
+        return 5;
 
-        loc.sun_family = AF_UNIX;
-        strncpy(loc.sun_path, A4_SOCK, sizeof(loc.sun_path) - 1);
+    memset(&sin, 0, sizeof sin);
+    sin.sin_family = AF_INET;
+    
+    if (bind(fd, (struct sockaddr *) &sin, sizeof sin) == -1)
+        return 2;
+    
+    if (listen(fd, 5) == -1)
+        return 3;
 
-        while(connect(fd, (struct sockaddr *) &loc,
-                      sizeof(struct sockaddr_un)) == -1 &&
-              (errno==ENOENT || errno==ECONNREFUSED))
-            ;
-
-        close(fd);
+    if (accept4(fd, NULL, 0, SOCK_NONBLOCK) == 0
+        || errno == EAGAIN || errno == EWOULDBLOCK)
         return 0;
-    }
+
+    return 4;
 }], [apr_cv_accept4=yes], [apr_cv_accept4=no], [apr_cv_accept4=no])])
 
 if test "$apr_cv_accept4" = "yes"; then
@@ -929,6 +973,25 @@ int main()
 
 if test "$apr_cv_epoll_create1" = "yes"; then
    AC_DEFINE([HAVE_EPOLL_CREATE1], 1, [Define if epoll_create1 function is supported])
+fi
+
+# Check for z/OS async i/o support.  
+AC_CACHE_CHECK([for asio -> message queue support], [apr_cv_aio_msgq],
+[AC_TRY_RUN([
+#define _AIO_OS390
+#include <aio.h>
+
+int main()
+{
+    struct aiocb a;
+
+    a.aio_notifytype = AIO_MSGQ;  /* use IPC message queue for notification */
+
+    return aio_cancel(2, NULL) == -1;
+}], [apr_cv_aio_msgq=yes], [apr_cv_aio_msgq=no], [apr_cv_aio_msgq=no])])
+
+if test "$apr_cv_aio_msgq" = "yes"; then
+   AC_DEFINE([HAVE_AIO_MSGQ], 1, [Define if async i/o supports message q's])
 fi
 
 # test for dup3
@@ -1128,7 +1191,8 @@ case $host in
         # that it has it.
         # FIXME - find exact 2.3 version that MMANON was fixed in.  It is
         # confirmed fixed in 2.4 series.
-        if test $os_version -le "240"; then
+        if test $os_pre24linux -eq 1; then
+            AC_MSG_WARN([Disabling anon mmap() support for Linux pre-2.4])
             APR_DECISION_OVERRIDE(USE_SHMEM_MMAP_ZERO USE_SHMEM_SHMGET_ANON)
         fi
         ;;
@@ -1194,11 +1258,9 @@ APR_IFALLYES(header:windows.h,
               APR_DECIDE(USE_SHMEM_WIN32, [Windows shared memory])])
 case $host in
     *linux* ) 
-        # Linux has problems with MM_SHMT_MMANON even though it reports
-        # that it has it.
-        # FIXME - find exact 2.3 version that MMANON was fixed in.  It is
-        # confirmed fixed in 2.4 series.
-        if test $os_version -le "240"; then
+        # Linux pre-2.4 had problems with MM_SHMT_MMANON even though
+        # it reports that it has it.
+        if test $os_pre24linux -eq 1; then
             APR_DECISION_OVERRIDE(USE_SHMEM_MMAP_TMP USE_SHMEM_MMAP_SHM dnl
                                   USE_SHMEM_SHMGET)
         fi
@@ -1295,7 +1357,8 @@ AC_ARG_WITH(sendfile, [  --with-sendfile         Override decision to use sendfi
             ;;
         s390-*-linux-gnu)
             # disable sendfile support for 2.2 on S/390
-            if test $os_version -lt 240; then
+            if test $os_pre24linux -eq 1; then
+                AC_MSG_WARN([Disabled sendfile support for Linux 2.2 on S/390])
                 sendfile="0"
             fi
             ;;
@@ -1465,6 +1528,7 @@ AC_SUBST(timeh)
 AC_SUBST(unistdh)
 AC_SUBST(signalh)
 AC_SUBST(sys_waith)
+AC_SUBST(processh)
 AC_SUBST(pthreadh)
 AC_SUBST(semaphoreh)
 AC_SUBST(windowsh)
@@ -1477,6 +1541,17 @@ if test "$netdbh" = "1"; then
     AC_MSG_ERROR([can not find h_errno in netdb.h])
   fi
 fi
+
+AC_ARG_ENABLE(allocator-uses-mmap,
+  [  --enable-allocator-uses-mmap    Use mmap in apr_allocator instead of malloc ],
+  [ if test "$enableval" = "yes"; then
+        APR_IFALLYES(header:sys/mman.h func:mmap func:munmap define:MAP_ANON,
+                     [AC_DEFINE(APR_ALLOCATOR_USES_MMAP, 1,
+                                [Define if apr_allocator should use mmap]) ],
+		     [AC_MSG_ERROR([mmap()/MAP_ANON not supported]) ]
+		    )
+    fi ]
+)
 
 dnl ----------------------------- Checks for standard typedefs
 AC_TYPE_OFF_T
@@ -1665,6 +1740,14 @@ case $host in
         esac
         size_t_fmt="lu"
         ;;
+    *-mingw*)
+        int64_t_fmt='#define APR_INT64_T_FMT "I64d"'
+        uint64_t_fmt='#define APR_UINT64_T_FMT "I64u"'
+        uint64_t_hex_fmt='#define APR_UINT64_T_HEX_FMT "I64x"'
+        int64_value="__int64"
+        long_value="__int64"
+        int64_strfn="_strtoi64"
+        ;; 
 esac
 
 APR_CHECK_TYPES_COMPATIBLE(ssize_t, int, [ssize_t_fmt="d"])
@@ -1752,13 +1835,12 @@ elif test "$ac_cv_type_off_t" = "yes"; then
     fi
     # Per OS tuning...
     case $host in
-     *apple-darwin10.*)
-      # off_t is a long long, but long == long long
-      if test "$ac_cv_sizeof_long" = "$ac_cv_sizeof_long_long"; then
-       off_t_fmt='#define APR_OFF_T_FMT "lld"'
-      fi
-    ;;
-   esac
+    *-mingw*)
+        off_t_value=apr_int64_t
+        off_t_fmt='#define APR_OFF_T_FMT "I64d"'
+        off_t_strfn='_strtoi64'
+        ;;
+    esac
 else
    # Fallback on int
    off_t_value=apr_int32_t
@@ -1767,22 +1849,35 @@ else
 fi
 AC_MSG_RESULT($off_t_value)
 
-# Regardless of whether _LARGEFILE64_SOURCE is used, on 32-bit
+# Regardless of whether _LARGEFILE64_SOURCE is used, on some
 # platforms _FILE_OFFSET_BITS will affect the size of ino_t and hence
 # the build-time ABI may be different from the apparent ABI when using
 # APR with another package which *does* define _FILE_OFFSET_BITS.
 # (Exactly as per the case above with off_t where LFS is *not* used)
 #
-# To be safe, hard-code apr_ino_t as 'unsigned long' iff that is
-# exactly the size of ino_t here; otherwise use ino_t as existing
+# To be safe, hard-code apr_ino_t as 'unsigned long' or 'unsigned int'
+# iff that is exactly the size of ino_t here; otherwise use ino_t as existing
 # releases did.  To be correct, apr_ino_t should have been made an
 # ino64_t as apr_off_t is off64_t, but this can't be done now without
 # breaking ABI.
-ino_t_value=ino_t
-if test "$ac_cv_sizeof_long" = "4"; then
-    APR_CHECK_TYPES_COMPATIBLE(ino_t, unsigned long, 
-                               ino_t_value="unsigned long")
-fi
+
+# Per OS tuning...
+case $host in
+*mingw*)
+    ino_t_value=apr_int64_t
+    ;;
+*)
+    ino_t_value=ino_t
+    APR_CHECK_SIZEOF_EXTENDED(AC_INCLUDES_DEFAULT, ino_t, $ac_cv_sizeof_long)
+    if test $ac_cv_sizeof_ino_t = 4; then
+        if test $ac_cv_sizeof_long = 4; then
+            ino_t_value="unsigned long"
+        else
+            ino_t_value="unsigned int"
+        fi
+    fi
+    ;;
+esac
 AC_MSG_NOTICE([using $ino_t_value for ino_t])
 
 # Checks for endianness
@@ -1877,9 +1972,8 @@ if test "$dsotype" = "any"; then
         *darwin[[0-8]]\.*) 
           # Original Darwin, not for 9.0!:
           AC_CHECK_FUNC(NSLinkModule, [dsotype=dyld]);;
-        *-hpux[[1-9]]\.*|*-hpux1[[01]]*)
-          # shl is specific to hpux(?), and is suboptimal for 64 bit builds,
-          # and most unlikely to be the choice of 12.x developers.
+        hppa*-hpux[[1-9]]\.*|hppa*-hpux1[[01]]*)
+          # shl is specific to parisc hpux SOM binaries, not used for 64 bit
           AC_CHECK_LIB(dld, shl_load, [have_shl=1])
           if test "$ac_cv_sizeof_voidp$have_shl" = "41"; then
             dsotype=shl; APR_ADDTO(LIBS,-ldld)
@@ -2608,13 +2702,23 @@ dnl Check for langinfo support
 AC_CHECK_HEADERS(langinfo.h)
 AC_CHECK_FUNCS(nl_langinfo)
 
+dnl ------------------------------ Defaults for some platform nuances
+
 dnl Do we have a Win32-centric Unicode FS?
-
-if test -z "$have_unicode_fs"; then
-  have_unicode_fs="0"
-fi
-
+APR_SETIFNULL(have_unicode_fs, [0])
 AC_SUBST(have_unicode_fs)
+
+APR_SETIFNULL(apr_has_xthread_files, [0])
+AC_SUBST(apr_has_xthread_files)
+
+APR_SETIFNULL(apr_procattr_user_set_requires_password, [0])
+AC_SUBST(apr_procattr_user_set_requires_password)
+
+APR_SETIFNULL(apr_thread_func, [])
+AC_SUBST(apr_thread_func)
+
+APR_SETIFNULL(apr_has_user, [1])
+AC_SUBST(apr_has_user)
 
 dnl ----------------------------- Finalize the variables
 
@@ -2633,6 +2737,7 @@ AC_SUBST(NOTEST_INCLUDES)
 
 dnl ----------------------------- Construct the files
 
+AC_SUBST(INTERNAL_CPPFLAGS)
 AC_SUBST(LDLIBS)
 AC_SUBST(INCLUDES)
 AC_SUBST(AR)
@@ -2642,13 +2747,20 @@ AC_SUBST(DEFAULT_OSDIR)
 AC_SUBST(EXEEXT)
 AC_SUBST(LIBTOOL_LIBS)
 
-# Use -no-install to link the test programs on all platforms
-# but Darwin, where it would cause the programs to be linked
-# against installed versions of libapr instead of those just
-# built.
+# Use -no-install or -no-fast-install to link the test 
+# programs on all platforms but Darwin, where it would cause
+# the programs to be linked against installed versions of
+# libapr instead of those just built.
 case $host in
-*-apple-darwin*) LT_NO_INSTALL="" ;;
-*) LT_NO_INSTALL="-no-install" ;;
+    *-apple-darwin*)
+        LT_NO_INSTALL=""
+        ;;
+    *-mingw*)
+        LT_NO_INSTALL="-no-fast-install"
+        ;;
+    *)
+        LT_NO_INSTALL="-no-install"
+        ;;
 esac
 AC_SUBST(LT_NO_INSTALL)
 
@@ -2699,15 +2811,6 @@ for i in $APR_SAVE_HEADERS; do
   rm -f $i.save
 done
 chmod +x apr-$APR_MAJOR_VERSION-config
-# for mingw builds, we currently won't allow the unix apr_private.h to exist.
-# instead, we will rely on the manually-crafted win32 apr_private.h instead.
-case $APR_PLATFORM in
-    *-mingw*)
-        rm include/arch/unix/apr_private.h
-        ;;
-    *)
-        ;;
-esac
 ],[
 dnl This section is expanded by configure UNQUOTED so variable 
 dnl references must be backslash-escaped as necessary.

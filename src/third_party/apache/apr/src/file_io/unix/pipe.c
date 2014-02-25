@@ -25,8 +25,8 @@
  * but now fcntl does, hence we need to do this extra checking.
  * The joys of beta programs. :-)
  */
-#if BEOS
-#if !BONE7
+#if defined(BEOS)
+#if !defined(BONE7)
 # define BEOS_BLOCKING 1
 #else
 # define BEOS_BLOCKING 0
@@ -35,7 +35,7 @@
 
 static apr_status_t pipeblock(apr_file_t *thepipe)
 {
-#if !BEOS_BLOCKING
+#if !defined(BEOS) || !BEOS_BLOCKING
       int fd_flags;
 
       fd_flags = fcntl(thepipe->filedes, F_GETFL, 0);
@@ -71,7 +71,7 @@ static apr_status_t pipeblock(apr_file_t *thepipe)
 
 static apr_status_t pipenonblock(apr_file_t *thepipe)
 {
-#if !BEOS_BLOCKING
+#if !defined(BEOS) || !BEOS_BLOCKING
       int fd_flags = fcntl(thepipe->filedes, F_GETFL, 0);
 
 #  if defined(O_NONBLOCK)
@@ -149,7 +149,7 @@ APR_DECLARE(apr_status_t) apr_os_pipe_put_ex(apr_file_t **file,
     (*file)->ungetchar = -1; /* no char avail */
     (*file)->filedes = *dafile;
     if (!register_cleanup) {
-        (*file)->flags = APR_FILE_NOCLEANUP;
+        (*file)->flags = APR_FOPEN_NOCLEANUP;
     }
     (*file)->buffered = 0;
 #if APR_HAS_THREADS

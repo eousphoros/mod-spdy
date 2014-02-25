@@ -704,7 +704,7 @@ APR_DECLARE(int) apr_vformatter(int (*flush_func)(apr_vformatter_buff_t *),
     apr_int64_t i_quad = 0;
     apr_uint64_t ui_quad;
     apr_int32_t i_num = 0;
-    apr_uint32_t ui_num;
+    apr_uint32_t ui_num = 0;
 
     char num_buf[NUM_BUF_SIZE];
     char char_buf[2];                /* for printing %% and %<unknown> */
@@ -810,10 +810,27 @@ APR_DECLARE(int) apr_vformatter(int (*flush_func)(apr_vformatter_buff_t *),
                 adjust_precision = adjust_width = NO;
 
             /*
-             * Modifier check.  Note that if APR_INT64_T_FMT is "d",
-             * the first if condition is never true.
+             * Modifier check.  In same cases, APR_OFF_T_FMT can be
+             * "lld" and APR_INT64_T_FMT can be "ld" (that is, off_t is
+             * "larger" than int64). Check that case 1st.
+             * Note that if APR_OFF_T_FMT is "d",
+             * the first if condition is never true. If APR_INT64_T_FMT
+             * is "d' then the second if condition is never true.
              */
-            if ((sizeof(APR_INT64_T_FMT) == 4 &&
+            if ((sizeof(APR_OFF_T_FMT) > sizeof(APR_INT64_T_FMT)) &&
+                ((sizeof(APR_OFF_T_FMT) == 4 &&
+                 fmt[0] == APR_OFF_T_FMT[0] &&
+                 fmt[1] == APR_OFF_T_FMT[1]) ||
+                (sizeof(APR_OFF_T_FMT) == 3 &&
+                 fmt[0] == APR_OFF_T_FMT[0]) ||
+                (sizeof(APR_OFF_T_FMT) > 4 &&
+                 strncmp(fmt, APR_OFF_T_FMT, 
+                         sizeof(APR_OFF_T_FMT) - 2) == 0))) {
+                /* Need to account for trailing 'd' and null in sizeof() */
+                var_type = IS_QUAD;
+                fmt += (sizeof(APR_OFF_T_FMT) - 2);
+            }
+            else if ((sizeof(APR_INT64_T_FMT) == 4 &&
                  fmt[0] == APR_INT64_T_FMT[0] &&
                  fmt[1] == APR_INT64_T_FMT[1]) ||
                 (sizeof(APR_INT64_T_FMT) == 3 &&
@@ -942,7 +959,7 @@ APR_DECLARE(int) apr_vformatter(int (*flush_func)(apr_vformatter_buff_t *),
                             &num_buf[NUM_BUF_SIZE], &s_len);
                 }
                 FIX_PRECISION(adjust_precision, precision, s, s_len);
-                if (alternate_form && i_num != 0) {
+                if (alternate_form && ui_num != 0) {
                     *--s = *fmt;        /* 'x' or 'X' */
                     *--s = '0';
                     s_len += 2;

@@ -1,49 +1,83 @@
                                                      -*- coding: utf-8 -*-
-Changes for APR 1.4.2
+Changes for APR 1.5.0
 
-  *) Undo a crash-bug introduced in 1.3.9 affecting some applications of 
-     the apr hash and table structures, reported to affect Subversion
-     by Bert Huijben <bert qqmail.nl>.  [Graham Leggett]
+  *) Fix Linux kernel version check to recognize more versions,
+     including versions 3.10 and later.  PR 55690.  [Joe Orton,
+     Arfrever Frehtes Taifersar Arahesis <arfrever.fta gmail.com>]
 
-Changes for APR 1.4.1
+  *) Add apr_sockaddr_is_wildcard() to check if a socket address
+     refers to the wildcard address for the protocol family (e.g.,
+     0.0.0.0/INADDR_ANY for IPv4).  [Jeff Trawick]
 
-  *) Win32: Properly handle the ERROR_DIRECTORY system error code.
-     [Brane Čibej]
+  *) apr_file_dup2() on Windows: Fix debug RTL assertion in when 
+     attempting to _commit(stdout) or _commit(stderr).  [Mike Rumph
+     <mike.rumph oracle.com>]
 
-Changes for APR 1.4.0
+  *) apr_socket_connect() on Windows: Handle WSAEISCONN.  PR 48736.
+     [<inoue ariel-networks.com>, Jeff Trawick]
 
-  *) Add apr_global_mutex_lockfile() for retrieving the file, if any,
-     associated with the mutex.  Add apr_global_mutex_name() for retrieving
-     the name of the lock mechanism used by the underlying proc mutex.
+  *) z/OS: threadsafe apr_pollset_poll support for sockets [Greg Ames]
+
+  *) Windows:  Don't obtain a mutex for buffered file I/O unless the
+     file was opened with the APR_FOPEN_XTHREAD flag.  [Ivan Zhakov
+     <ivan visualsvn.com>]
+
+  *) Windows:  Create named shared memory segments under the "Local"
+     namespace if the caller is unprivileged, fixing an inability of
+     unprivileged callers to use apr_shm_create() with named shared
+     memory segments under recent Windows.  As before, shared memory
+     segments are created under the "Global" namespace for privileged
+     callers.  Add apr_shm_create_ex() and apr_shm_attach_ex(), which
+     provide the ability to override the normal namespace selection.
      [Jeff Trawick]
 
-  *) Add apr_socket_atreadeof to determine whether the receive part of the
-     socket has been closed by the peer.
-     [Ruediger Pluem, Mladen Turk, Joe Orton]
+  *) Update compile settings for MINT OS.  PR 47181. [Alan Hourihane
+     <alanh fairlite.co.uk>]
 
-  *) Make apr_pollset and apr_pollcb implementations using providers.
-     Added apr_pollset_create_ex and apr_pollcb_create_ex that allows
-     choosing non-default providers.
-     [Mladen Turk]
+  *) Files and pipes on Windows:  Don't create an unused pollset when
+     files and pipes are opened.  [Mladen Turk]
 
-  *) apr_temp_dir_get() now checks the TMPDIR environment variable first,
-     instead of third.  [Jim Jagielski]
+  *) apr_socket_timeout_set() on Windows: If the socket was in a non-
+     blocking state before, disable that setting so that timeouts work.
+     [Jeff Trawick]
 
-  *) Add apr_file_sync() and apr_file_datasync() calls.  [Bojan Smojver]
+  *) File info APIs: Fix calculation of atime and mtime on AIX. PR 51146.
+     [Ruediger Pluem]
 
-  *) apr_pollset_wakeup() on Windows: Fix core caused by closing the
-     file_socket_pipe with standard file_close. 
-     [Arsen Chaloyan, Mladen Turk]
+  *) Add the apr_escape interface. [Graham Leggett]
 
-  *) Introduce apr_hash_do() for iterating over a hash table.  [Mladen Turk]
+  *) Cygwin build fixes.  PRs 51016 and 55586.  [Carlo Bramini
+     <carlo.bramix libero.it>] 
 
-  *) Make sure WIN32 behaves the same as posix for file-backed shared memory 
-     by removing the file on cleanup/remove.  [Mladen Turk]
+  *) Add apr_skiplist family. [Jim Jagielski]
 
-  *) Introduce apr_pollset_wakeup() for interrupting the blocking
-     apr_pollset_poll() call.  [Mladen Turk]
+  *) Add experimental cmake-based build system for Windows.  Refer to 
+     README.cmake for more information.  [Jeff Trawick, Tom Donovan]
 
-  *) Add apr_file_link() function.  PR 44841.  [Mark Heily <mark heily.com>]
+  *) Add the apr_table_getm() call, which transparently handles the
+     merging of keys with multiple values. [Graham Leggett]
+
+  *) Add apr_hash_this_key(), apr_hash_this_key_len(), and 
+     apr_hash_this_val() for easier access to those attributes from
+     a hash iterator.  [Hyrum K. Wright <hyrum_wright mail.utexas.edu>]
+
+  *) MinGW/MSYS:  Support shared builds of APR, other general improvements
+     to support of this toolchain.  PR 46175.  [Carlo Bramini 
+     <carlo.bramix libero.it>]  
+
+  *) Improve platform detection by updating config.guess and config.sub.
+     [Rainer Jung]
+
+  *) apr_socket_opt_set: Add support for APR_SO_BROADCAST. PR 46389.
+     [Armin Müller <mueller itestra com>]
+
+  *) Enable platform specific support for the opening of a file or
+     pipe in non-blocking mode through the APR_FOPEN_NONBLOCK flag.
+     [Graham Leggett]
+
+Changes for APR 1.4.x and later:
+
+  *) http://svn.apache.org/viewvc/apr/apr/branches/1.4.x/CHANGES?view=markup
 
 Changes for APR 1.3.x and later:
 

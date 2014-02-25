@@ -17,6 +17,7 @@
 #include "apr_arch_threadproc.h"
 #include "apr_arch_file_io.h"
 #include "apr_thread_proc.h"
+#include "apr_signal.h"
 #include "apr_file_io.h"
 #include "apr_general.h"
 #if APR_HAVE_SIGNAL_H
@@ -30,7 +31,7 @@
 /* Windows only really support killing process, but that will do for now. 
  *
  * ### Actually, closing the input handle to the proc should also do fine 
- * for most console apps.  This definately needs improvement...
+ * for most console apps.  This definitely needs improvement...
  */
 APR_DECLARE(apr_status_t) apr_proc_kill(apr_proc_t *proc, int signal)
 {
@@ -50,7 +51,7 @@ void apr_signal_init(apr_pool_t *pglobal)
 {
 }
 
-const char *apr_signal_description_get(int signum)
+APR_DECLARE(const char *) apr_signal_description_get(int signum)
 {
     return "unknown signal (not supported)";
 }

@@ -76,8 +76,8 @@ APR_DECLARE(apr_status_t) apr_dir_open(apr_dir_t **new, const char *dirname,
     ELSE_WIN_OS_IS_ANSI
     {
         /* Note that we won't open a directory that is greater than MAX_PATH,
-         * including the trailing /* wildcard suffix.  If a * won't fit, then
-         * neither will any other file name within the directory.
+         * counting the additional '/' '*' wildcard suffix.  If a * won't fit
+         * then neither will any other file name within the directory.
          * The length not including the trailing '*' is stored as rootlen, to
          * skip over all paths which are too long.
          */
@@ -128,9 +128,9 @@ APR_DECLARE(apr_status_t) apr_dir_read(apr_finfo_t *finfo, apr_int32_t wanted,
         if (thedir->dirhand == INVALID_HANDLE_VALUE) 
         {
             apr_status_t rv;
-            if (rv = utf8_to_unicode_path(wdirname, sizeof(wdirname) 
-                                                     / sizeof(apr_wchar_t), 
-                                          thedir->dirname)) {
+            if ((rv = utf8_to_unicode_path(wdirname, sizeof(wdirname) 
+                                                   / sizeof(apr_wchar_t), 
+                                           thedir->dirname))) {
                 return rv;
             }
             eos = wcschr(wdirname, '\0');
@@ -162,8 +162,8 @@ APR_DECLARE(apr_status_t) apr_dir_read(apr_finfo_t *finfo, apr_int32_t wanted,
                 return apr_get_os_error();
             }
         }
-        if (rv = unicode_to_utf8_path(thedir->name, APR_FILE_MAX * 3 + 1, 
-                                      thedir->w.entry->cFileName))
+        if ((rv = unicode_to_utf8_path(thedir->name, APR_FILE_MAX * 3 + 1, 
+                                       thedir->w.entry->cFileName)))
             return rv;
         fname = thedir->name;
     }
@@ -280,8 +280,9 @@ APR_DECLARE(apr_status_t) apr_dir_make(const char *path, apr_fileperms_t perm,
     {
         apr_wchar_t wpath[APR_PATH_MAX];
         apr_status_t rv;
-        if (rv = utf8_to_unicode_path(wpath, sizeof(wpath) 
-                                              / sizeof(apr_wchar_t), path)) {
+        if ((rv = utf8_to_unicode_path(wpath,
+                                       sizeof(wpath) / sizeof(apr_wchar_t),
+                                       path))) {
             return rv;
         }
         if (!CreateDirectoryW(wpath, NULL)) {
@@ -332,9 +333,6 @@ APR_DECLARE(apr_status_t) apr_dir_make_recursive(const char *path,
     
     rv = apr_dir_make (path, perm, pool); /* Try to make PATH right out */
     
-    if (APR_STATUS_IS_EEXIST(rv)) /* It's OK if PATH exists */
-        return APR_SUCCESS;
-    
     if (APR_STATUS_IS_ENOENT(rv)) { /* Missing an intermediate dir */
         char *dir;
         
@@ -346,6 +344,15 @@ APR_DECLARE(apr_status_t) apr_dir_make_recursive(const char *path,
         if (rv == APR_SUCCESS)
             rv = apr_dir_make (dir, perm, pool);   /* And complete the path */
     }
+
+    /*
+     * It's OK if PATH exists. Timing issues can lead to the second
+     * apr_dir_make being called on existing dir, therefore this check
+     * has to come last.
+     */
+    if (APR_STATUS_IS_EEXIST(rv))
+        return APR_SUCCESS;
+
     return rv;
 }
 
@@ -357,8 +364,9 @@ APR_DECLARE(apr_status_t) apr_dir_remove(const char *path, apr_pool_t *pool)
     {
         apr_wchar_t wpath[APR_PATH_MAX];
         apr_status_t rv;
-        if (rv = utf8_to_unicode_path(wpath, sizeof(wpath) 
-                                              / sizeof(apr_wchar_t), path)) {
+        if ((rv = utf8_to_unicode_path(wpath,
+                                       sizeof(wpath) / sizeof(apr_wchar_t),
+                                       path))) {
             return rv;
         }
         if (!RemoveDirectoryW(wpath)) {

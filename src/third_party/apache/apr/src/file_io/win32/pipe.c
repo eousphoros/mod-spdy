@@ -29,6 +29,9 @@
 #if APR_HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #endif
+#if APR_HAVE_PROCESS_H
+#include <process.h>            /* for getpid() on Win32 */
+#endif
 #include "apr_arch_misc.h"
 
 APR_DECLARE(apr_status_t) apr_file_pipe_timeout_set(apr_file_t *thepipe,
@@ -43,8 +46,7 @@ APR_DECLARE(apr_status_t) apr_file_pipe_timeout_set(apr_file_t *thepipe,
         return APR_ENOTIMPL;
     }
     if (timeout && !(thepipe->pOverlapped)) {
-        /* Cannot be nonzero if a pipe was opened blocking
-         */
+        /* Cannot be nonzero if a pipe was opened blocking */
         return APR_EINVAL;
     }
     thepipe->timeout = timeout;
@@ -82,7 +84,7 @@ APR_DECLARE(apr_status_t) apr_file_pipe_create_ex(apr_file_t **in,
     char name[50];
 
     sa.nLength = sizeof(sa);
-    
+
 #if APR_HAS_UNICODE_FS
     IF_WIN_OS_IS_UNICODE
         sa.bInheritHandle = FALSE;
@@ -105,8 +107,9 @@ APR_DECLARE(apr_status_t) apr_file_pipe_create_ex(apr_file_t **in,
     (*in)->dataRead = 0;
     (*in)->direction = 0;
     (*in)->pOverlapped = NULL;
+#if APR_FILES_AS_SOCKETS
     (void) apr_pollset_create(&(*in)->pollset, 1, p, 0);
-
+#endif
     (*out) = (apr_file_t *)apr_pcalloc(p, sizeof(apr_file_t));
     (*out)->pool = p;
     (*out)->fname = NULL;
@@ -119,8 +122,9 @@ APR_DECLARE(apr_status_t) apr_file_pipe_create_ex(apr_file_t **in,
     (*out)->dataRead = 0;
     (*out)->direction = 0;
     (*out)->pOverlapped = NULL;
+#if APR_FILES_AS_SOCKETS
     (void) apr_pollset_create(&(*out)->pollset, 1, p, 0);
-
+#endif
     if (apr_os_level >= APR_WIN_NT) {
         /* Create the read end of the pipe */
         dwOpenMode = PIPE_ACCESS_INBOUND;
@@ -139,10 +143,10 @@ APR_DECLARE(apr_status_t) apr_file_pipe_create_ex(apr_file_t **in,
         (*in)->filehand = CreateNamedPipe(name,
                                           dwOpenMode,
                                           dwPipeMode,
-                                          1,            //nMaxInstances,
-                                          0,            //nOutBufferSize, 
-                                          65536,        //nInBufferSize,                   
-                                          1,            //nDefaultTimeOut,                
+                                          1,            /* nMaxInstances,   */
+                                          0,            /* nOutBufferSize,  */
+                                          65536,        /* nInBufferSize,   */
+                                          1,            /* nDefaultTimeOut, */
                                           &sa);
 
         /* Create the write end of the pipe */
@@ -154,14 +158,14 @@ APR_DECLARE(apr_status_t) apr_file_pipe_create_ex(apr_file_t **in,
             (*out)->pOverlapped->hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
             (*out)->timeout = 0;
         }
-        
+
         (*out)->filehand = CreateFile(name,
-                                      GENERIC_WRITE,   // access mode
-                                      0,               // share mode
-                                      &sa,             // Security attributes
-                                      OPEN_EXISTING,   // dwCreationDisposition
-                                      dwOpenMode,      // Pipe attributes
-                                      NULL);           // handle to template file
+                                      GENERIC_WRITE, /* access mode             */
+                                      0,             /* share mode              */
+                                      &sa,           /* Security attributes     */
+                                      OPEN_EXISTING, /* dwCreationDisposition   */
+                                      dwOpenMode,    /* Pipe attributes         */
+                                      NULL);         /* handle to template file */
     }
     else {
         /* Pipes on Win9* are blocking. Live with it. */
@@ -208,8 +212,9 @@ APR_DECLARE(apr_status_t) apr_os_pipe_put_ex(apr_file_t **file,
     (*file)->timeout = -1;
     (*file)->ungetchar = -1;
     (*file)->filehand = *thefile;
+#if APR_FILES_AS_SOCKETS
     (void) apr_pollset_create(&(*file)->pollset, 1, pool, 0);
-
+#endif
     if (register_cleanup) {
         apr_pool_cleanup_register(pool, *file, file_cleanup,
                                   apr_pool_cleanup_null);
@@ -229,8 +234,9 @@ APR_DECLARE(apr_status_t) apr_os_pipe_put(apr_file_t **file,
 static apr_status_t create_socket_pipe(SOCKET *rd, SOCKET *wr)
 {
     static int id = 0;
-
+    FD_SET rs;
     SOCKET ls;
+    struct timeval socktm;
     struct sockaddr_in pa;
     struct sockaddr_in la;
     struct sockaddr_in ca;
@@ -238,7 +244,7 @@ static apr_status_t create_socket_pipe(SOCKET *rd, SOCKET *wr)
     apr_status_t rv = APR_SUCCESS;
     int ll = sizeof(la);
     int lc = sizeof(ca);
-    int bm = 1;
+    unsigned long bm = 1;
     int uid[2];
     int iid[2];
 
@@ -290,17 +296,41 @@ static apr_status_t create_socket_pipe(SOCKET *rd, SOCKET *wr)
         goto cleanup;
     }
     for (;;) {
+        int ns;
+        int nc = 0;
         /* Listening socket is nonblocking by now.
-         * The accept must create the socket
-         * immediatelly because we connected already.
+         * The accept should create the socket
+         * immediatelly because we are connected already.
+         * However on buys systems this can take a while
+         * until winsock gets a chance to handle the events.
          */
+        FD_ZERO(&rs);
+        FD_SET(ls, &rs);
+
+        socktm.tv_sec  = 1;
+        socktm.tv_usec = 0;
+        if ((ns = select(0, &rs, NULL, NULL, &socktm)) == SOCKET_ERROR) {
+            /* Accept still not signaled */
+            Sleep(100);
+            continue;
+        }
+        if (ns == 0) {
+            /* No connections in the last second */
+            continue;
+        }
         if ((*rd = accept(ls, (SOCKADDR *)&ca, &lc)) == INVALID_SOCKET) {
             rv =  apr_get_netos_error();
             goto cleanup;
         }
         /* Verify the connection by reading the send identification.
          */
-        nrd = recv(*rd, (char *)iid, sizeof(iid), 0);
+        do {
+            if (nc++)
+                Sleep(1);
+            nrd = recv(*rd, (char *)iid, sizeof(iid), 0);
+            rv = nrd == SOCKET_ERROR ? apr_get_netos_error() : APR_SUCCESS;
+        } while (APR_STATUS_IS_EAGAIN(rv));
+
         if (nrd == sizeof(iid)) {
             if (memcmp(uid, iid, sizeof(uid)) == 0) {
                 /* Wow, we recived what we send.
@@ -316,7 +346,6 @@ static apr_status_t create_socket_pipe(SOCKET *rd, SOCKET *wr)
             }
         }
         else if (nrd == SOCKET_ERROR) {
-            rv =  apr_get_netos_error();
             goto cleanup;
         }
         closesocket(*rd);
@@ -412,3 +441,4 @@ apr_status_t apr_file_socket_pipe_close(apr_file_t *file)
     }
     return stat;
 }
+
