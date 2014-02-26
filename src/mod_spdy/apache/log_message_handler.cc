@@ -22,6 +22,7 @@
 // #defined LOG_* as numbers. This conflicts with what we are using those here.
 #undef HAVE_SYSLOG
 #include "http_log.h"
+APLOG_USE_MODULE(spdy);
 
 #include "base/debug/debugger.h"
 #include "base/debug/stack_trace.h"

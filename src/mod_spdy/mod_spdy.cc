@@ -205,8 +205,8 @@ void ChildInit(apr_pool_t* pool, server_rec* server_list) {
   for (server_rec* server = server_list; server != NULL;
        server = server->next) {
     spdy_enabled |= mod_spdy::GetServerConfig(server)->spdy_enabled();
-    if (server->loglevel > max_apache_log_level) {
-      max_apache_log_level = server->loglevel;
+    if (server->log.level > max_apache_log_level) {
+      max_apache_log_level = server->log.level;
     }
   }
 
