@@ -159,7 +159,8 @@ fi
 if [ ! -f "$PROGRESS_DIR/openssl_built" ]; then
   pushd $OPENSSL_SRC_ROOT >/dev/null
   echo -n "Building OpenSSL (this may take a while) ... "
-  make; make install_sw >> $OPENSSL_BUILDLOG 2>&1
+  make >> $OPENSSL_BUILDLOG 2>&1
+  make install_sw >> $OPENSSL_BUILDLOG 2>&1
   if [ $? -ne 0 ]; then
     echo "Failed. Build log at $OPENSSL_BUILDLOG."
     do_cleanup
