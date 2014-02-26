@@ -42,7 +42,7 @@ if [ ! -d "$BUILDROOT" ]; then
   echo "Not a directory: $BUILDROOT"
   echo "Attempting to create: $BUILDROOT"
   mkdir -p $BUILDROOT
-  if [ "$0" != "0" ]; then
+  if [ "$?" != "0" ]; then
     echo "Failed to create: $BUILDROOT"
     exit 1
   fi
