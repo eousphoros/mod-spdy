@@ -55,8 +55,8 @@ SlaveConnectionFactory::SlaveConnectionFactory(conn_rec* master_connection) {
   base_server_ = master_connection->base_server;
   local_addr_ = DeepCopySockAddr(master_connection->local_addr, pool_.pool());
   local_ip_ = apr_pstrdup(pool_.pool(), master_connection->local_ip);
-  remote_addr_ = DeepCopySockAddr(master_connection->remote_addr, pool_.pool());
-  remote_ip_ = apr_pstrdup(pool_.pool(), master_connection->remote_ip);
+  remote_addr_ = DeepCopySockAddr(master_connection->client_addr, pool_.pool());
+  remote_ip_ = apr_pstrdup(pool_.pool(), master_connection->client_ip);
   master_connection_id_ = master_connection->id;
 }
 
@@ -92,8 +92,8 @@ SlaveConnection::SlaveConnection(SlaveConnectionFactory* factory) {
   slave_connection_->base_server = factory->base_server_;
   slave_connection_->local_addr = factory->local_addr_;
   slave_connection_->local_ip = factory->local_ip_;
-  slave_connection_->remote_addr = factory->remote_addr_;
-  slave_connection_->remote_ip = factory->remote_ip_;
+  slave_connection_->client_addr = factory->remote_addr_;
+  slave_connection_->client_ip = factory->remote_ip_;
 
   // One of the other things we will need in slave_connection is a
   // connection id. One of the bits of info we will need for it is the
