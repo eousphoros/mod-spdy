@@ -7,3 +7,8 @@ Live Demo
 =========
 
 https://blck.io
+
+Original Source
+===============
+
+https://code.google.com/p/mod-spdy/
