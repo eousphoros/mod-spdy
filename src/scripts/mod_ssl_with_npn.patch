@@ -1,15 +1,3 @@
-Index: modules/ssl/ssl_private.h
-===================================================================
---- modules/ssl/ssl_private.h	(revision 1367982)
-+++ modules/ssl/ssl_private.h	(working copy)
-@@ -603,6 +603,7 @@
- #ifndef OPENSSL_NO_TLSEXT
- int          ssl_callback_ServerNameIndication(SSL *, int *, modssl_ctx_t *);
- #endif
-+int ssl_callback_AdvertiseNextProtos(SSL *ssl, const unsigned char **data, unsigned int *len, void *arg);
- 
- /**  Session Cache Support  */
- void         ssl_scache_init(server_rec *, apr_pool_t *);
 Index: modules/ssl/ssl_engine_init.c
 ===================================================================
 --- modules/ssl/ssl_engine_init.c	(revision 1367982)
@@ -78,10 +66,10 @@ Index: modules/ssl/ssl_engine_kernel.c
 ===================================================================
 --- modules/ssl/ssl_engine_kernel.c	(revision 1367982)
 +++ modules/ssl/ssl_engine_kernel.c	(working copy)
-@@ -2104,3 +2104,84 @@
-     return 0;
+@@ -2139,3 +2139,84 @@
  }
- #endif
+ 
+ #endif /* HAVE_SRP */
 +
 +#ifdef HAVE_TLS_NPN
 +/*
@@ -217,12 +205,12 @@ Index: modules/ssl/mod_ssl.h
 +
  #endif /* __MOD_SSL_H__ */
  /** @} */
-Index: modules/ssl/ssl_toolkit_compat.h
+Index: modules/ssl/ssl_private.h
 ===================================================================
---- modules/ssl/ssl_toolkit_compat.h	(revision 1367982)
-+++ modules/ssl/ssl_toolkit_compat.h	(working copy)
-@@ -145,6 +145,11 @@
- #define HAVE_FIPS
+--- modules/ssl/ssl_private.h	(revision 1367982)
++++ modules/ssl/ssl_private.h	(working copy)
+@@ -146,6 +146,11 @@
+ #define HAVE_ECC
  #endif
  
 +#if OPENSSL_VERSION_NUMBER >= 0x10001000L && !defined(OPENSSL_NO_NEXTPROTONEG) \
@@ -230,6 +218,14 @@ Index: modules/ssl/ssl_toolkit_compat.h
 +#define HAVE_TLS_NPN
 +#endif
 +
- #ifndef PEM_F_DEF_CALLBACK
- #ifdef PEM_F_PEM_DEF_CALLBACK
- /** In OpenSSL 0.9.8 PEM_F_DEF_CALLBACK was renamed */
+ /* OCSP stapling */
+ #if !defined(OPENSSL_NO_OCSP) && defined(SSL_CTX_set_tlsext_status_cb)
+ #define HAVE_OCSP_STAPLING
+@@ -614,6 +619,7 @@
+     unsigned char aes_key[16];
+ } modssl_ticket_key_t;
+ #endif
++int ssl_callback_AdvertiseNextProtos(SSL *ssl, const unsigned char **data, unsigned int *len, void *arg);
+ 
+ typedef struct SSLSrvConfigRec SSLSrvConfigRec;
+
