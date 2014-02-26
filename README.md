@@ -3,7 +3,11 @@ mod-spdy
 
 OpenSSL 1.0.1(f) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04.
 
-Status: mod_ssl with npn building. mod_spdy building.
+Status: Functional. Cleanup pending.
+
+apache2-2.4.7-1ubuntu1 + mod-ssl(npn,1.0.1f) + mod-spdy
+https://www.ssllabs.com/ssltest/analyze.html?d=blck.io NPN: spdy/3 spdy/2 http/1.1 x-mod-spdy/0.9.4.1-b1cbd2b
+
 
 Required Packages
 =================
