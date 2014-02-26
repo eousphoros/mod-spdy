@@ -196,7 +196,7 @@ if [ ! -f "$PROGRESS_DIR/modssl_configured" ]; then
   sed 's/--libs-only-l openssl/--libs-only-l --static openssl/' configure.bak > configure
   chmod --reference=configure.bak configure
 
-  ./configure --enable-ssl=shared --with-ssl=$BUILDROOT/$OPENSSL_INST_ROOT >> $APACHE_HTTPD_BUILDLOG
+  LDFLAGS="-ldl" ./configure --enable-ssl=shared --with-ssl=$BUILDROOT/$OPENSSL_INST_ROOT >> $APACHE_HTTPD_BUILDLOG
   if [ $? -ne 0 ]; then
     echo "Failed. Build log at $APACHE_HTTPD_BUILDLOG."
     do_cleanup
