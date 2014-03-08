@@ -530,7 +530,7 @@ ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
 endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
-cmd_regen_makefile = ./build/gyp_chromium -fmake --ignore-environment "--toplevel-dir=/root/mod_spdy/src" -I/root/mod_spdy/src/build/common.gypi "--depth=/root/mod_spdy/src" build/all.gyp
+cmd_regen_makefile = ./build/gyp_chromium -fmake --ignore-environment "--toplevel-dir=./mod_spdy/src" -I./mod_spdy/src/build/common.gypi "--depth=./mod_spdy/src" build/all.gyp
 Makefile: third_party/zlib/zlib.gyp third_party/apache/aprutil/aprutil.gyp base/base.gypi third_party/chromium/src/base/third_party/dynamic_annotations/dynamic_annotations.gyp testing/gtest.gyp third_party/apache/httpd/httpd.gyp third_party/apache/apr/apr.gyp net/net.gyp build/internal/release_impl_official.gypi build/internal/release_defaults.gypi build/release.gypi third_party/modp_b64/modp_b64.gyp build/common.gypi build/install.gyp base/base.gyp build/all.gyp build/internal/release_impl.gypi third_party/mod_diagnostics/mod_diagnostics.gyp mod_spdy/mod_spdy.gyp build/build_util.gyp testing/gmock.gyp
 	$(call do_cmd,regen_makefile)
 
