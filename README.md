@@ -11,14 +11,14 @@ https://www.ssllabs.com/ssltest/analyze.html?d=blck.io NPN:  spdy/3.1 spdy/3 spd
 
 Quick Start
 ===========
-
+```sh
 $ sudo apt-get -y install git g++ apache2 libapr1-dev libaprutil1-dev patch binutils make devscripts
 $ git clone https://github.com/eousphoros/mod-spdy.git
 $ cd mod-spdy/src
 $ ./build_modssl_with_npn.sh
 $ make BUILDTYPE=Release
-
-If everything is successful you should have mod-spdy/src/out/Release/libmod_spdy.so and /mod-spdy/src/mod_ssl.so which can be installed into your apache2.4 modules directory.
+````
+> If everything is successful you should have mod-spdy/src/out/Release/libmod_spdy.so and /mod-spdy/src/mod_ssl.so which can be installed into your apache2.4 modules directory.
 
 Live Demo
 =========
