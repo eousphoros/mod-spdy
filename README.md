@@ -1,7 +1,7 @@
 mod-spdy
 ========
 
-OpenSSL 1.0.1(f) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04.
+OpenSSL 1.0.1(f) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04. (Built under 13.10 but I haven't thrown any traffic at it yet)
 
 Status: Functional. Cleanup pending.
 
@@ -16,6 +16,7 @@ $ sudo apt-get -y install git g++ apache2 libapr1-dev libaprutil1-dev patch binu
 $ git clone https://github.com/eousphoros/mod-spdy.git
 $ cd mod-spdy/src
 $ ./build_modssl_with_npn.sh
+$ chmod +x ./build/gyp_chromium
 $ make BUILDTYPE=Release
 ````
 > If everything is successful you should have mod-spdy/src/out/Release/libmod_spdy.so and /mod-spdy/src/mod_ssl.so which can be installed into your apache2.4 modules directory.
