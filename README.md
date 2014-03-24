@@ -1,7 +1,7 @@
 mod-spdy
 ========
 
-OpenSSL 1.0.1(f) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04. (Built under 13.10 but I haven't thrown any traffic at it yet)
+OpenSSL 1.0.1(f) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04 by eousphoros, tested under Ubuntu 13.10 by René Kijewski
 
 Status: Functional. Cleanup pending.
 
