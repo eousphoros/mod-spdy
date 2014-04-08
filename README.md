@@ -1,11 +1,7 @@
-https://www.openssl.org/news/vulnerabilities.html#2014-0160
-
-Working on a patch.
-
 mod-spdy
 ========
 
-OpenSSL 1.0.1(f) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04 by eousphoros, tested under Ubuntu 13.10 by René Kijewski
+OpenSSL 1.0.1(g) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04 by eousphoros, tested under Ubuntu 13.10 by René Kijewski
 
 Status: Functional. Cleanup pending.
 
