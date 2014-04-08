@@ -97,7 +97,7 @@ function uncompress_file {
   fi
 }
 
-OPENSSL_SRC_TGZ_URL="http://www.openssl.org/source/openssl-1.0.1f.tar.gz"
+OPENSSL_SRC_TGZ_URL="http://www.openssl.org/source/openssl-1.0.1g.tar.gz"
 APACHE_HTTPD_SRC_TGZ_URL="http://archive.apache.org/dist/httpd/httpd-2.4.7.tar.gz"
 APACHE_HTTPD_MODSSL_NPN_PATCH_PATH="$(dirname $0)/scripts/mod_ssl_with_npn.patch"
 
@@ -116,7 +116,7 @@ cp $APACHE_HTTPD_MODSSL_NPN_PATCH_PATH $BUILDROOT/$APACHE_HTTPD_MODSSL_NPN_PATCH
 
 pushd $BUILDROOT >/dev/null
 
-download_file $OPENSSL_SRC_TGZ_URL $OPENSSL_SRC_TGZ f26b09c028a0541cab33da697d522b25
+download_file $OPENSSL_SRC_TGZ_URL $OPENSSL_SRC_TGZ de62b43dfcd858e66a74bee1c834e959
 download_file $APACHE_HTTPD_SRC_TGZ_URL $APACHE_HTTPD_SRC_TGZ 9272aadaa2d702f6ae5758641d830d7f
 
 echo ""
