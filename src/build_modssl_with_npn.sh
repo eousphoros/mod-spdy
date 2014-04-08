@@ -126,7 +126,7 @@ uncompress_file $APACHE_HTTPD_SRC_TGZ
 
 if [ ! -f "$PROGRESS_DIR/modssl_patched" ]; then
   pushd $APACHE_HTTPD_SRC_ROOT >/dev/null
-  echo -n "Applying Apache mod_ssl NPN patch ... "
+  echo "Applying Apache mod_ssl NPN patch ... "
   patch -p0 < $BUILDROOT/$APACHE_HTTPD_MODSSL_NPN_PATCH
   if [ $? -ne 0 ]; then
     echo "Failed to patch."
