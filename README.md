@@ -1,6 +1,8 @@
 mod-spdy
 ========
 
+[![Build Status](https://travis-ci.org/eousphoros/mod-spdy.svg?branch=master)](https://travis-ci.org/eousphoros/mod-spdy)
+
 OpenSSL 1.0.1(g) and Apache 2.4.7 port for mod-ssl with npn support and mod-spdy. Tested under Ubuntu 14.04 by eousphoros, tested under Ubuntu 13.10 by René Kijewski
 
 Status: Functional. Cleanup pending.
