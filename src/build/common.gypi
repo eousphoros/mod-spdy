@@ -495,7 +495,7 @@
           'no_strict_aliasing%': 1,
           'conditions': [
             ['OS=="linux"', {
-              'werror%': '-Werror',
+              'werror%': '',
               }, { # turn off -Werror on other Unices
               'werror%': '',
             }],
