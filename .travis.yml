@@ -1,0 +1,15 @@
+language: c
+
+before_install:
+- sudo apt-get update
+
+install:
+- sudo apt-get install -qq git g++ apache2 libapr1-dev libaprutil1-dev patch binutils make devscripts
+
+before_script:
+- cd src
+- ./build_modssl_with_npn.sh
+- chmod +x ./build/gyp_chromium
+
+script:
+- make BUILDTYPE=Release
