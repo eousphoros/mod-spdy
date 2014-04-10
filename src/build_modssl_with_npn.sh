@@ -75,7 +75,14 @@ fi
 function download_file {
   if [ ! -f "$PROGRESS_DIR/$2.downloaded" ]; then
     echo "Downloading $1"
-    curl -f -# "$1" -o $2 || do_cleanup
+    curl -f -# "$1" -o $2 
+    if [ "$?" != "0" ]; then
+      echo "First attempt failed.. trying once more."
+      curl -f -# "$1" -o $2
+      if [ "$?" != "0" ]; then
+        do_cleanup
+      fi
+    fi
     if [[ $(md5sum $2 | cut -d\  -f1) != $3 ]]; then
       echo "md5sum mismatch for $2"
       do_cleanup
