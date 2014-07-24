@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This script builds mod_ssl.so for Apache 2.2.x, with SSL NPN
+# This script builds mod_ssl.so for Apache 2.4.x, with SSL NPN
 # support.
 #
 # NPN is not yet supported in Apache HTTPD mod_ssl. A patch has been
@@ -8,7 +8,7 @@
 # https://issues.apache.org/bugzilla/show_bug.cgi?id=52210
 #
 # Thus, we download the 1.0.1 release of OpenSSL and the most recent
-# release of Apache 2.2, and apply a patch to enable NPN support in
+# release of Apache 2.4, and apply a patch to enable NPN support in
 # Apache mod_ssl.
 #
 # We currently statically link OpenSSL with mod_ssl, which results in
