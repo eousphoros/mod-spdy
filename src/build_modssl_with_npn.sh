@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # This script builds mod_ssl.so for Apache 2.2.x, with SSL NPN
 # support.
