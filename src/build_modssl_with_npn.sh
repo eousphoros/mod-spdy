@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# This script builds mod_ssl.so for Apache 2.2.x, with SSL NPN
+# This script builds mod_ssl.so for Apache 2.4.x, with SSL NPN
 # support.
 #
 # NPN is not yet supported in Apache HTTPD mod_ssl. A patch has been
@@ -8,7 +8,7 @@
 # https://issues.apache.org/bugzilla/show_bug.cgi?id=52210
 #
 # Thus, we download the 1.0.1 release of OpenSSL and the most recent
-# release of Apache 2.2, and apply a patch to enable NPN support in
+# release of Apache 2.4, and apply a patch to enable NPN support in
 # Apache mod_ssl.
 #
 # We currently statically link OpenSSL with mod_ssl, which results in
@@ -104,8 +104,8 @@ function uncompress_file {
   fi
 }
 
-OPENSSL_SRC_TGZ_URL="http://www.openssl.org/source/openssl-1.0.1h.tar.gz"
-APACHE_HTTPD_SRC_TGZ_URL="http://archive.apache.org/dist/httpd/httpd-2.4.7.tar.gz"
+OPENSSL_SRC_TGZ_URL="https://www.openssl.org/source/openssl-1.0.1h.tar.gz"
+APACHE_HTTPD_SRC_TGZ_URL="https://archive.apache.org/dist/httpd/httpd-2.4.10.tar.gz"
 APACHE_HTTPD_MODSSL_NPN_PATCH_PATH="$(dirname $0)/scripts/mod_ssl_with_npn.patch"
 
 OPENSSL_SRC_TGZ=$(basename $OPENSSL_SRC_TGZ_URL)
@@ -124,7 +124,7 @@ cp $APACHE_HTTPD_MODSSL_NPN_PATCH_PATH $BUILDROOT/$APACHE_HTTPD_MODSSL_NPN_PATCH
 pushd $BUILDROOT >/dev/null
 
 download_file $OPENSSL_SRC_TGZ_URL $OPENSSL_SRC_TGZ 8d6d684a9430d5cc98a62a5d8fbda8cf
-download_file $APACHE_HTTPD_SRC_TGZ_URL $APACHE_HTTPD_SRC_TGZ 9272aadaa2d702f6ae5758641d830d7f
+download_file $APACHE_HTTPD_SRC_TGZ_URL $APACHE_HTTPD_SRC_TGZ 9b5f9342f73a6b1ad4e8c4b0f3f5a159
 
 echo ""
 
