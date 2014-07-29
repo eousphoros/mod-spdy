@@ -7,9 +7,7 @@ OpenSSL 1.0.1(h) and Apache 2.4.10 port for mod-ssl with npn support and mod-spd
 
 Status: Functional. Cleanup pending.
 
-apache2-2.4.7-1ubuntu1 + mod-ssl(npn,1.0.1h) + mod-spdy
-
-https://www.ssllabs.com/ssltest/analyze.html?d=blck.io NPN:  spdy/3.1 spdy/3 spdy/2 http/1.1 x-mod-spdy/0.9.4.1-b1cbd2b
+apache2-2.4.10 + mod-ssl(npn,1.0.1h) + mod-spdy
 
 
 Quick Start
