@@ -222,7 +222,7 @@ export DEBEMAIL="${MAINTMAIL}"
 # Make everything happen in the OUTPUTDIR.
 cd "${OUTPUTDIR}"
 
-COMMON_DEPS="apache2.2-common"
+COMMON_DEPS="apache2"
 COMMON_PREDEPS="dpkg (>= 1.14.0)"
 REPLACES=""
 
