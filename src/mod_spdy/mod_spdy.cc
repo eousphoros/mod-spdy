@@ -58,17 +58,24 @@ extern "C" {
 APR_DECLARE_OPTIONAL_FN(module*, ap_find_loaded_module_symbol,
                         (server_rec*, const char*));
 
-// Declaring modified mod_ssl's optional hooks here (so that we don't need to
-// #include "mod_ssl.h").
-APR_DECLARE_EXTERNAL_HOOK(modssl, AP, int, npn_advertise_protos_hook,
-                          (conn_rec *connection, apr_array_header_t *protos));
-APR_DECLARE_EXTERNAL_HOOK(modssl, AP, int, npn_proto_negotiated_hook,
-                          (conn_rec *connection, const char *proto_name,
-                           apr_size_t proto_name_len));
+typedef int (*ssl_npn_advertise_protos)(conn_rec *connection, 
+                                        apr_array_header_t *protos);
+
+typedef int (*ssl_npn_proto_negotiated)(conn_rec *connection, 
+                                        const char *proto_name,
+                                        apr_size_t proto_name_len);
+
+APR_DECLARE_OPTIONAL_FN(int, modssl_register_npn, (conn_rec *conn, 
+                                                   ssl_npn_advertise_protos advertisefn,
+                                                   ssl_npn_proto_negotiated negotiatedfn));
 
 }  // extern "C"
 
 namespace {
+
+int AdvertiseSpdy(conn_rec* connection, apr_array_header_t* protos);
+int OnNextProtocolNegotiated(conn_rec* connection, const char* proto_name,
+                             apr_size_t proto_name_len);
 
 const char kFakeModSpdyProtocolName[] =
     "x-mod-spdy/" MOD_SPDY_VERSION_STRING "-" LASTCHANGE_STRING;
@@ -309,6 +316,24 @@ int PreConnection(conn_rec* connection, void* csd) {
       if (assume_spdy_version == mod_spdy::spdy::SPDY_VERSION_NONE) {
         return DECLINED;
       }
+    }
+
+    // Advertise that we support SPDY and register a callback.
+    // The callback will check if we're actually to be using SPDY with the client,
+    // and enable this module if so.
+
+    int (*register_npn)(conn_rec *conn,
+                        ssl_npn_advertise_protos advertisefn,
+                        ssl_npn_proto_negotiated negotiatedfn) =
+        APR_RETRIEVE_OPTIONAL_FN(modssl_register_npn);
+
+    if (register_npn != NULL) {
+      if (register_npn(connection, AdvertiseSpdy, OnNextProtocolNegotiated) != OK) {
+        return DECLINED;
+      }
+    }
+    else {
+      return DECLINED;
     }
 
     // Okay, we've got a real connection over SSL, so we'll be negotiating with
@@ -750,38 +775,6 @@ void RegisterHooks(apr_pool_t* pool) {
   // Our server push filter is a request-level filter, so we insert it with the
   // insert-filter hook.
   ap_hook_insert_filter(InsertRequestFilters, NULL, NULL, APR_HOOK_MIDDLE);
-
-  // Register a hook with mod_ssl to be called when deciding what protocols to
-  // advertise during Next Protocol Negotiatiation (NPN); we'll use this
-  // opportunity to advertise that we support SPDY.  This hook is declared in
-  // mod_ssl.h, for appropriately-patched versions of mod_ssl.  See TAMB 10.2.3
-  // for more about optional hooks.
-  APR_OPTIONAL_HOOK(
-      modssl,                     // prefix of optional hook
-      npn_advertise_protos_hook,  // name of optional hook
-      AdvertiseSpdy,              // hook function to be called
-      NULL,                       // predecessors
-      NULL,                       // successors
-      APR_HOOK_MIDDLE);           // position
-  // If we're advertising SPDY support via NPN, we ought to also advertise HTTP
-  // support.  Ideally, the Apache core HTTP module would do this, but for now
-  // it doesn't, so we'll do it for them.  We use APR_HOOK_LAST here, since
-  // http/1.1 is our last choice.  Note that our AdvertiseHttp function won't
-  // add "http/1.1" to the list if it's already there, so this is future-proof.
-  APR_OPTIONAL_HOOK(modssl, npn_advertise_protos_hook,
-                    AdvertiseHttp, NULL, NULL, APR_HOOK_LAST);
-
-  // Register a hook with mod_ssl to be called when NPN has been completed and
-  // the next protocol decided upon.  This hook will check if we're actually to
-  // be using SPDY with the client, and enable this module if so.  This hook is
-  // declared in mod_ssl.h, for appropriately-patched versions of mod_ssl.
-  APR_OPTIONAL_HOOK(
-      modssl,                     // prefix of optional hook
-      npn_proto_negotiated_hook,  // name of optional hook
-      OnNextProtocolNegotiated,   // hook function to be called
-      NULL,                       // predecessors
-      NULL,                       // successors
-      APR_HOOK_MIDDLE);           // position
 
   // Create the various filters that will be used to route bytes to/from us
   // on slave connections.
