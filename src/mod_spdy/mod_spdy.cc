@@ -501,9 +501,11 @@ int ProcessConnection(conn_rec* connection) {
 // Called by mod_ssl when it needs to decide what protocols to advertise to the
 // client during Next Protocol Negotiation (NPN).
 int AdvertiseSpdy(conn_rec* connection, apr_array_header_t* protos) {
+  const mod_spdy::SpdyServerConfig* config =
+      mod_spdy::GetServerConfig(connection);
   // If mod_spdy is disabled on this server, then we shouldn't advertise SPDY
   // to the client.
-  if (!mod_spdy::GetServerConfig(connection)->spdy_enabled()) {
+  if (!config>spdy_enabled()) {
     return DECLINED;
   }
 
@@ -513,20 +515,6 @@ int AdvertiseSpdy(conn_rec* connection, apr_array_header_t* protos) {
   APR_ARRAY_PUSH(protos, const char*) = kSpdy31ProtocolName;
   APR_ARRAY_PUSH(protos, const char*) = kSpdy3ProtocolName;
   APR_ARRAY_PUSH(protos, const char*) = kSpdy2ProtocolName;
-  return OK;
-}
-
-// Called by mod_ssl (along with the AdvertiseSpdy function) when it needs to
-// decide what protocols to advertise to the client during Next Protocol
-// Negotiation (NPN).  These two functions are separate so that AdvertiseSpdy
-// can run early in the hook order, and AdvertiseHttp can run late.
-int AdvertiseHttp(conn_rec* connection, apr_array_header_t* protos) {
-  const mod_spdy::SpdyServerConfig* config =
-      mod_spdy::GetServerConfig(connection);
-  // If mod_spdy is disabled on this server, don't do anything.
-  if (!config->spdy_enabled()) {
-    return DECLINED;
-  }
 
   // Apache definitely supports HTTP/1.1, and so it ought to advertise it
   // during NPN.  However, the Apache core HTTP module doesn't yet know about
