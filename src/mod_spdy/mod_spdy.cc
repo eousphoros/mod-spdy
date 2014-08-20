@@ -505,7 +505,7 @@ int AdvertiseSpdy(conn_rec* connection, apr_array_header_t* protos) {
       mod_spdy::GetServerConfig(connection);
   // If mod_spdy is disabled on this server, then we shouldn't advertise SPDY
   // to the client.
-  if (!config>spdy_enabled()) {
+  if (!config->spdy_enabled()) {
     return DECLINED;
   }
 
