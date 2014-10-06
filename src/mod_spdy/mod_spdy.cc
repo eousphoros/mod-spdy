@@ -512,7 +512,6 @@ int AdvertiseSpdy(conn_rec* connection, apr_array_header_t* protos) {
   // Advertise SPDY to the client.  We push protocol names in descending order
   // of preference; the one we'd most prefer comes first.
   // TODO(mdsteele): Advertise SPDY/3.1 once we fully support it.
-  APR_ARRAY_PUSH(protos, const char*) = kSpdy31ProtocolName;
   APR_ARRAY_PUSH(protos, const char*) = kSpdy3ProtocolName;
   APR_ARRAY_PUSH(protos, const char*) = kSpdy2ProtocolName;
 
