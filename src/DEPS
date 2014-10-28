@@ -13,16 +13,16 @@
 # limitations under the License.
 
 vars = {
-  "chromium_trunk": "http://src.chromium.org/svn/trunk",
+  "chromium_trunk": "https://src.chromium.org/svn/trunk",
   "chromium_revision": "@146826",
   "chromium_deps_root": "src/third_party/chromium_deps",
-  "apr_src": "http://svn.apache.org/repos/asf/apr/apr/tags/1.4.2",
+  "apr_src": "https://svn.apache.org/repos/asf/apr/apr/tags/1.5.1",
   "apr_revision": "@head",
-  "aprutil_src": "http://svn.apache.org/repos/asf/apr/apr-util/tags/1.3.9",
+  "aprutil_src": "https://svn.apache.org/repos/asf/apr/apr-util/tags/1.5.3",
   "aprutil_revision": "@head",
-  "apache_httpd_src": "http://svn.apache.org/repos/asf/httpd/httpd/tags/2.2.15",
+  "apache_httpd_src": "https://svn.apache.org/repos/asf/httpd/httpd/tags/2.4.10",
   "apache_httpd_revision": "@head",
-  "mod_pagespeed_root": "http://modpagespeed.googlecode.com/svn/tags/0.10.19.5",
+  "mod_pagespeed_root": "https://modpagespeed.googlecode.com/svn/tags/1.8.31.4",
   "mod_pagespeed_revision": "@head",
 }
 
