@@ -3,11 +3,11 @@ mod-spdy
 
 [![Build Status](https://travis-ci.org/eousphoros/mod-spdy.svg?branch=master)](https://travis-ci.org/eousphoros/mod-spdy)
 
-OpenSSL 1.0.1(j) and Apache 2.4.10 port for mod-ssl with npn support, TLS_FALLBACK_SCSV and mod-spdy. If you are looking for 2.4.7 (The version that is currently shipping with Ubuntu LTS, use the 2.4.7 branch)
+OpenSSL 1.0.2 and Apache 2.4.12 port for mod-ssl with npn support, TLS_FALLBACK_SCSV and mod-spdy. If you are looking for 2.4.7 (The version that is currently shipping with Ubuntu LTS, use the 2.4.7 branch)
 
 Status: Functional. Cleanup pending.
 
-apache2-2.4.10 + mod-ssl(npn,1.0.1j) + mod-spdy
+apache2-2.4.12 + mod-ssl(npn,1.0.2) + mod-spdy
 
 
 Quick Start
